@@ -1,0 +1,171 @@
+/**
+ * @package    look-education
+ * @copyright  Copyright Nehloo Interactive LLC
+ * @license    https://github.com/look-education/look-education/blob/master/LICENSE
+ */
+
+@import url(https://fonts.googleapis.com/css?family=Lato);
+body {
+  font-family: 'Lato';
+}
+@import url(https://fonts.googleapis.com/css?family=Archivo+Narrow);
+h3 {
+  font-family: 'Archivo Narrow', 400;
+  font-size: 20px;
+}
+@import url(https://fonts.googleapis.com/css?family=Archivo+Black);
+h2 {
+  font-family: 'Archivo Black Regular', 400;
+  font-size: 30px;
+}
+@import url(https://fonts.googleapis.com/css?family=Anton|Montserrat:900);
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 40px;
+}
+
+.centeredScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.centeredScreenPreloader60x60 {
+  margin-top: -30px;
+  margin-left: -30px;
+}
+
+.navbar {
+  filter:alpha(opacity=0.95);
+  filter:progid:DXImageTransform.Microsoft.Alpha(opacity=0.95);
+  -moz-opacity:0.95;
+  -khtml-opacity:0.95;
+  opacity:0.95;
+}
+
+/* text */
+.truncated {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.wrap {
+	white-space: normal !important;
+}
+.line-height-breadcrumbs {
+  line-height: 1.6;
+}
+
+/* F7 tweaks */
+.list .item-title {
+  white-space: normal !important;
+}
+
+/* images */
+.rounded {
+  border-radius: 50%;
+}
+.bordered {
+  border: 2px solid #efefef;
+}
+.grayscale {
+  filter: grayscale(100%); /* Current draft standard */
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%); 
+  -o-filter: grayscale(100%); /* Not yet supported in Gecko, Opera or IE */ 
+  filter: gray; /* IE */
+  -webkit-filter: grayscale(100%); /* New WebKit */
+  -webkit-filter: grayscale(1); /* Old WebKit */
+  -webkit-transform: translateZ(0);
+  -webkit-perspective: 1000;
+  -webkit-backface-visibility: hidden;
+}
+.user-image {
+  display: inline-block;
+  vertical-align: top;
+  width: 46%;
+  margin: 0px 20px 0 0;
+  max-width: 64px;
+  max-height: 64px;
+}
+.user-info {
+  display: inline-block;
+  text-align: top;
+  width: 75%;
+  @media (max-width: 620px) {
+    width: 100%;
+  }
+}
+
+/* video */
+.fb-video span, .fb-video span iframe {
+  max-height: 100%;
+}
+.video-quiz {
+  width: 100%;
+  height: calc(100vh - 80px);
+  z-index: 20000;
+  background-color: #171717;
+  position: sticky;
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  top: 0;
+}
+.video-watch {
+  max-height: 100%;
+  height: 100%;
+}
+
+/* buttons */
+.button-float-right-with-margin {
+  margin-right: 40px;
+}
+
+.phone-only {
+	display:none;
+}
+.desktop-only {
+	display:block;
+}
+.padding-horizontal-desktop-only {
+  padding-left: 20px;
+}
+@media only screen
+and (min-width : 200px)
+and (max-width : 760px) {
+  .no-padding-phone-only {
+    padding: 0px;
+  }
+  .padding-horizontal-desktop-only {
+    padding-left: 0px;
+  }
+  .phone-only {
+    display:block;
+  }
+  .desktop-only {
+    display:none;
+  }
+  .panel-left {
+  	width: 320px;
+  	min-width: 320px;
+  	border-right: 3px solid #be4123;
+  }
+  .video-quiz {
+    height: 33vh !important;
+  }
+}
+
+/* temp patch for F7 high CPU load */
+/* https://github.com/framework7io/framework7/issues/2952 */
+.md .navbar a.link:before,
+.md .toolbar a.link:before,
+.md .subnavbar a.link:before,
+.md .data-table-rows-select a.link:before,
+.md .data-table-pagination a.link:before,
+.md .searchbar-disable-button:before,
+.md .searchbar .input-clear-button:before,
+.md .notification-close-button:before {
+  background-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 66%, rgba(255, 255, 255, 0) 66%);
+}
