@@ -4,7 +4,7 @@ LOOK.education started in 2013 as a free, basic application that allowed parents
 
 LOOK.education became an open-source platform in 2019, starting with a new base code developed from scratch for what was then called "Next-Gen LOOK.education", and with the intent to attract a community of developers that would contribute to build an open-source Visual LMS. Learning and teaching visually may be the future of education and training, for all individuals regardless of their age, race, ethnicity, geographical location, disability status (including visually impared) etc.
 
-![LOOK.education](./img/look-education-sticker-600x121.png)
+![LOOK.education](./public/img/look-education-sticker-600x121.png)
 
 ## Contributing to LOOK.education
 
