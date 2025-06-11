@@ -1,12 +1,12 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
-var Parse = require('parse');
-Parse.initialize(process.env.REACT_APP_PARSE_SERVER_APP_KEY);
-Parse.serverURL = process.env.REACT_APP_PARSE_SERVER_URL;
+import Parse from 'parse/dist/parse.min.js';
+Parse.initialize(import.meta.env.REACT_APP_PARSE_SERVER_APP_KEY);
+Parse.serverURL = import.meta.env.REACT_APP_PARSE_SERVER_URL;
 
 const DatabaseRequest = {
 

@@ -1,11 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React, { Component } from 'react';
-import { Page, Navbar, NavLeft, Link, Block, NavTitle, Icon, Row } from 'framework7-react';
+import { Page, Navbar, NavLeft, Link, Block, NavTitle, Icon } from 'framework7-react';
 
 import ContentCard from './ContentCard';
 import CollectionPageAuthor from './CollectionPageAuthor'
@@ -55,7 +55,7 @@ export default class UserContentAnalyticsPage extends Component {
           <NavLeft colorTheme="black" style={{ width:"40px" }}>
             <Link back animate={DatabaseRequest.GetCurrentUser() ? !DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "accessibilityReduceMotion") : false}><Icon f7="arrow_left"></Icon></Link>
           </NavLeft>
-          <NavTitle colorTheme="black"><Link className="no-margin-left no-padding-left" href="/" external><img alt="" src="/static/img/look-education-sticker.png" height="50" /></Link></NavTitle>
+          <NavTitle colorTheme="black"><Link className="no-margin-left no-padding-left" href="/" external><img alt="" src="./img/look-education-sticker.png" height="50" /></Link></NavTitle>
         </Navbar>
 
         <div style={{ zIndex:"-10000", position:"absolute", top:0, width:"100%", height:"50%", opacity:0.1, backgroundImage:"linear-gradient(black, white)" }}></div>
@@ -75,14 +75,14 @@ export default class UserContentAnalyticsPage extends Component {
             <CollectionPageAuthor user={ this.state.user } isOwner={ true } />
           </Block>
 
-          <Row className="justify-content-flex-start">
+          <div className="row justify-content-flex-start">
             {this.state.content.map((content, index) => {
               const contentAnalytics = this.state.contentAnalytics.find(item => DatabaseRequest.GetId(DatabaseRequest.GetValue(item, "content")) == DatabaseRequest.GetId(content));
               return (
                 <ContentCard key={ DatabaseRequest.GetId(content) } content={ content } contentAnalytics={ contentAnalytics } showCollectionTitle={ true } />
               )}
             )}
-          </Row>
+          </div>
           </>
         }
         

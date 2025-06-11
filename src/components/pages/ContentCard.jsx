@@ -1,13 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React, { Component } from 'react';
-import { Button, Col, Card, CardContent, CardHeader, CardFooter, Icon, Link, Popover, List, ListItem, SkeletonBlock } from 'framework7-react';
-
-import Moment from 'react-moment';
+import { Button, Card, CardContent, CardHeader, CardFooter, Icon, Link, Popover, List, ListItem, SkeletonBlock } from 'framework7-react';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest';
 import CollectionUtils from '../utils/CollectionUtils';
@@ -85,7 +83,7 @@ export default class ContentCard extends Component {
     const quizPreferences = DatabaseRequest.GetValue(content, "quizPreferences");
 
     return (
-    <Col key={ DatabaseRequest.GetId(content) } width="100" tabletWidth="33" desktopWidth="33" className="margin-bottom">
+    <div key={ DatabaseRequest.GetId(content) } tabletWidth="33" desktopWidth="33" className="col-100 margin-bottom">
         <Card className="elevation-5 elevation-hover-10 elevation-transition" style={{ backgroundColor:"#efefef" }}>
           <Link noLinkClass routeProps={{ contentAnalytics:contentAnalytics }} href={ '/watch/' + DatabaseRequest.GetId(content) }>
           { !content &&
@@ -165,13 +163,13 @@ export default class ContentCard extends Component {
                 <Icon f7={ publicAccessIcon }></Icon>
               </div>
               <span>
-                <img alt="" src={ "/static/provider/" + DatabaseRequest.GetValue(content, "provider") + ".png" } height="20" valign="middle" />&nbsp; { this.action[DatabaseRequest.GetValue(content, "type")] + " " + watchedPercentage + "%" }
+                <img alt="" src={ "./provider/" + DatabaseRequest.GetValue(content, "provider") + ".png" } height="20" valign="middle" />&nbsp; { this.action[DatabaseRequest.GetValue(content, "type")] + " " + watchedPercentage + "%" }
               </span>
             </CardFooter>
             </>  
           }
         </Card>
-      </Col>
+      </div>
     )
   }
 }

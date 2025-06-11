@@ -1,6 +1,6 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  * @credits    @JeaNugroho, @nehloo
  */

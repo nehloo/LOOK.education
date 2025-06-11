@@ -1,15 +1,19 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
+
+//import 'framework7/css/bundle'; // ✅ Core F7 styles
+//import Framework7 from 'framework7/lite-bundle'; // ✅ Lightweight core
+//import Framework7React from 'framework7-react'; // ✅ React integration
+//Framework7.use(Framework7React); // ✅ Register React plugin
 
 import React from 'react';
 import {
   App,
   Panel,
-  View,
-  Statusbar
+  View
 } from 'framework7-react';
 
 import routes from '../js/routes';
@@ -34,13 +38,21 @@ export default function (props) {
          });
         }
       },
+      pageInit: function (e, page) {
+        // This will run when the page is initialized
+        console.log('HomePage initialized!');
+      },
     } */
   };
+
+  console.log("starting displaying the page");
+
+  console.log(routes);
 
   return (
     <App params={f7params}>
       {/* Statusbar */}
-      <Statusbar />
+      <div className="statusbar"></div>
 
       {/* Left Panel */}
       <Panel left cover themeDark>
@@ -53,7 +65,17 @@ export default function (props) {
       </Panel>
 
       {/* Main View */}
-      <View id="main-view" url="/" main className="safe-areas" pushState={true} pushStateSeparator="" pushStateRoot="" />
+      <View
+        id="main-view"
+        url="/"
+        main
+        className="safe-areas"
+        pushState={true}
+        pushStateSeparator=""
+        pushStateRoot=""
+        router
+        routerInit={true}
+      />
     </App>
   );
 };

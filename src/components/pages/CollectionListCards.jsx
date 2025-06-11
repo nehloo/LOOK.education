@@ -1,14 +1,14 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React from 'react';
-import { Icon, Link, Row, Col, Card, CardContent, CardHeader, CardFooter, SkeletonBlock } from 'framework7-react';
+import { Icon, Link, Card, CardContent, CardHeader, CardFooter, SkeletonBlock } from 'framework7-react';
 
 import NumericLabel from 'react-pretty-numbers';
-import Pluralize from 'react-pluralize';
+import pluralize from 'pluralize';
 
 import DatabaseRequest from "../frameworks/DatabaseRequest"
 
@@ -40,7 +40,7 @@ export default class CollectionListCards extends React.Component {
           <>
           { DatabaseRequest.GetValue(DatabaseRequest.GetValue(collection, 'providersCount'), provider) > 0 &&
             <>
-            &nbsp; <img alt="" src={ "/static/provider/" + provider + ".png" } height="20" width="20" />
+            &nbsp; <img alt="" src={ "./provider/" + provider + ".png" } height="20" width="20" />
             </>
           }
           </>
@@ -76,7 +76,7 @@ export default class CollectionListCards extends React.Component {
         thumbnail = DatabaseRequest.GetValue(DatabaseRequest.GetValue(collection, 'topCollection'), "thumbnail");
       }
       return (
-        <Col key={ DatabaseRequest.GetId(collection) } width="100" tabletWidth="33" desktopWidth="25" className="margin-bottom search-item">
+        <div key={ DatabaseRequest.GetId(collection) } tabletWidth="33" desktopWidth="25" className="col-100 margin-bottom search-item">
           <Card className="elevation-5 elevation-hover-10 elevation-transition">
             { isTopCollection &&
             <CardHeader className="no-border">
@@ -111,21 +111,21 @@ export default class CollectionListCards extends React.Component {
                 <>
                 {collectionsCount ? collectionsCount : 0}
                 /
-                <Pluralize className="margin-right" singular={'collection'} count={totalCollectionsCount} />
+                <span className="margin-right">{pluralize('collection', totalCollectionsCount)}</span>
                 </>
               }
               { collectionsCount && (!totalCollectionsCount || collectionsCount == totalCollectionsCount) &&
-                <Pluralize className="margin-right" singular={'collection'} count={collectionsCount} />
+                <span className="margin-right">{pluralize('collection', totalCollectionsCount)}</span>
               }
               { totalContentCount && contentCount != totalContentCount &&
                 <>
                 {contentCount ? contentCount : 0}
                 /
-                <Pluralize className="margin-right" singular={'item'} count={totalContentCount} />
+                <span className="margin-right">{pluralize('item', totalCollectionsCount)}</span>
                 </>
               }
               { contentCount && (!totalContentCount || contentCount == totalContentCount) &&
-                <Pluralize className="margin-right" singular={'item'} count={contentCount} />
+                <span className="margin-right">{pluralize('item', totalCollectionsCount)}</span>
               }
             </CardContent>
             { showTopCollectionTitle &&
@@ -160,15 +160,15 @@ export default class CollectionListCards extends React.Component {
             </CardFooter>
             </a>
           </Card>
-        </Col>
+        </div>
       );
     });
 
     return (
       <>
-      <Row className="collections-list search-list justify-content-flex-start">
+      <div className="row collections-list search-list justify-content-flex-start">
         { collectionsRendered }
-      </Row>
+      </div>
       </>
     );
   }

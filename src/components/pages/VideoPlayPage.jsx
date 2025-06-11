@@ -1,15 +1,15 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React from 'react'
-import { Page, Link, Icon, Row, Col, Block, List, ListItem, ListInput, Button, Preloader, Navbar, NavLeft, NavTitle } from 'framework7-react'
+import { Page, Link, Icon, Block, List, ListItem, ListInput, Button, Preloader, Navbar, NavLeft, NavTitle } from 'framework7-react'
 
 import ReactPlayer from 'react-player'
 
-import CanvasDraw from "react-canvas-draw"
+// import CanvasDraw from "react-canvas-draw"
 
 import DatabaseRequest from "../frameworks/DatabaseRequest"
 import CollectionUtils from '../utils/CollectionUtils'
@@ -563,7 +563,7 @@ export default class VideoPlayPage extends React.Component {
           <NavLeft colorTheme="black" style={{ width:"40px", height:"32px" }}>
             <Link back colorTheme="white" animate={DatabaseRequest.GetCurrentUser() ? !DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "accessibilityReduceMotion") : false}>
               <Icon f7="arrow_left" className="margin-right"></Icon>
-              <img alt="" src="/static/img/look-education-sticker.png" height="24" />
+              <img alt="" src="./img/look-education-sticker.png" height="24" />
             </Link>
           </NavLeft>
         </Navbar>
@@ -573,11 +573,11 @@ export default class VideoPlayPage extends React.Component {
         }
 
         { this.takequiz &&
-          <Row>
-            <Col width="100" tabletWidth="70" desktopWidth="70" className="video-quiz elevation-10 margin-bottom">
+          <div className="row">
+            <div tabletWidth="70" desktopWidth="70" className="col-100 video-quiz elevation-10 margin-bottom">
               { video }
-            </Col>
-            <Col width="100" tabletWidth="30" desktopWidth="30" bgColor="white" textColor="black" className="padding">
+            </div>
+            <div tabletWidth="30" desktopWidth="30" bgColor="white" textColor="black" className="col-100 padding">
               <Block className="no-margin-top no-padding"><h3 className="no-margin-top">{ DatabaseRequest.GetValue(this.state.content, "title") }</h3></Block>
               { !DatabaseRequest.GetCurrentUser() &&
                 <List>
@@ -662,8 +662,8 @@ export default class VideoPlayPage extends React.Component {
                 <br />
                 </>
               }
-            </Col>
-          </Row>
+            </div>
+          </div>
         
         ||
 

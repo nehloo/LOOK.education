@@ -1,6 +1,6 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
@@ -20,11 +20,11 @@ export default class CollectionPageBreadcrumbs extends Component {
           <a href={ "/collection/" + DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "topCollection")) }><b>{ DatabaseRequest.GetValue(DatabaseRequest.GetValue(this.props.collection, "topCollection"), "title") }</b></a>
           { DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "parentCollection")) != DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "topCollection")) &&
             <>
-              &nbsp; > ... > &nbsp;
+              &nbsp; <span>{'>'}</span> ... <span>{'>'}</span> &nbsp;
               <a href={ "/collection/" + DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "parentCollection")) }>{ DatabaseRequest.GetValue(DatabaseRequest.GetValue(this.props.collection, "parentCollection"), "title") }</a>
             </>
           }
-          &nbsp; > &nbsp;
+          &nbsp; <span>{'>'}</span> &nbsp;
           <a href={ "/collection/" + DatabaseRequest.GetId(this.props.collection) }>{ this.props.title }</a>
         </BlockTitle>
       }

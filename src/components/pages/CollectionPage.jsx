@@ -1,11 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React, { Component } from 'react';
-import { Page, Navbar, NavLeft, Link, Block, NavTitle, Icon, Row, Col, Progressbar, BlockHeader } from 'framework7-react';
+import { Page, Navbar, NavLeft, Link, Block, NavTitle, Icon, Progressbar, BlockHeader } from 'framework7-react';
 
 import CollectionList from './CollectionList';
 import ContentCard from './ContentCard';
@@ -110,7 +110,7 @@ export default class CollectionPage extends Component {
           <NavLeft colorTheme="black" style={{ width:"40px" }}>
             <Link back animate={DatabaseRequest.GetCurrentUser() ? !DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "accessibilityReduceMotion") : false}><Icon f7="arrow_left"></Icon></Link>
           </NavLeft>
-          <NavTitle colorTheme="black"><Link className="no-margin-left no-padding-left" href="/" external><img alt="" src="/static/img/look-education-sticker.png" height="50" /></Link></NavTitle>
+          <NavTitle colorTheme="black"><Link className="no-margin-left no-padding-left" href="/" external><img alt="" src="./img/look-education-sticker.png" height="50" /></Link></NavTitle>
         </Navbar>
 
         <div style={{ zIndex:"-10000", position:"absolute", top:0, width:"100%", height:"50%", opacity:0.1, backgroundImage:"linear-gradient(black, white)" }}></div>
@@ -148,13 +148,13 @@ export default class CollectionPage extends Component {
             }
 
             { this.props.subscribers &&
-              <Row className="justify-content-flex-start">
+              <div className="justify-content-flex-start">
                 {this.state.subscribers.map((subscriber) =>
-                  <Col key={ DatabaseRequest.GetId(subscriber) } width="100" tabletWidth="33" className="padding-bottom">
+                  <div key={ DatabaseRequest.GetId(subscriber) } tabletWidth="33" className="col-100 padding-bottom">
                     <CollectionPageAuthor user={ subscriber } topCollectionId={ DatabaseRequest.GetId(DatabaseRequest.GetValue(this.state.collection, "topCollection")) } />
-                  </Col>
+                  </div>
                 )}
-              </Row>
+              </div>
             }
 
           </Block>
@@ -180,14 +180,14 @@ export default class CollectionPage extends Component {
           }
 
           { !this.props.subscribers && this.state.collectionsDidFetch && this.state.contentAnalytics && this.state.content &&
-            <Row className="justify-content-flex-start">
+            <div className="justify-content-flex-start">
               {this.state.content.map((content, index) => {
                 const contentAnalytics = this.state.contentAnalytics.find(item => DatabaseRequest.GetId(DatabaseRequest.GetValue(item, "content")) == DatabaseRequest.GetId(content));
                 return (
                   <ContentCard key={ DatabaseRequest.GetId(content) } content={ content } contentAnalytics={ contentAnalytics } />
                 )}
               )}
-            </Row>
+            </div>
           }
 
           </>

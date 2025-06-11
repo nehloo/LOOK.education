@@ -1,11 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React from 'react';
-import { Page, Navbar, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar, ListInput, List, Button, Row, AccordionItem, AccordionToggle, AccordionContent } from 'framework7-react';
+import { Page, Navbar, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar, ListInput, List, Button, AccordionItem, AccordionToggle, AccordionContent } from 'framework7-react';
 
 import CollectionList from './CollectionList';
 import HomePageMenuLinks from './HomePageMenuLinks';
@@ -15,7 +15,7 @@ import DatabaseRequest from "../frameworks/DatabaseRequest";
 import F7Utils from "../utils/F7Utils";
 import CollectionUtils from '../utils/CollectionUtils';
 
-export default class extends React.Component {
+export default class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -228,6 +228,13 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
+
+    console.log("componentDidMount");
+
+    this.app = this.$f7;
+    const isLargeScreen = F7Utils.IsLargeScreen(this.app);
+    this.setState({ isLargeScreen });
+    
     if (this.props.searchTerm) {
       F7Utils.SetDocumentTitle(this.props.searchTerm);
       this.fetchSearchContent(this.props.searchTerm);
@@ -239,22 +246,24 @@ export default class extends React.Component {
 
   render() {
 
-    let app = this.$f7;
+    console.log("render");
+
+    if (this.state.isLargeScreen === undefined) return null;
 
     var userLogo = DatabaseRequest.GetCurrentUser() ? DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") : null;
     if (!userLogo) {
-      userLogo = '/static/img/user-logo.png';
+      userLogo = './img/user-logo.png';
     }
 
     return (
       <Page>
         <Navbar bgColor="white">
           <NavTitle colorTheme="black">
-            <Link className={ !F7Utils.IsLargeScreen(app) ? "no-padding-left" : "" } href="/" external><img src="/static/img/look-education-sticker.png" height="50" /></Link>
+            <Link className={ this.state.isLargeScreen ? "" : "no-padding-left" } href="/" external><img src="./img/look-education-sticker.png" height="50" /></Link>
           </NavTitle>
           { DatabaseRequest.GetCurrentUser() &&
             <NavRight colorTheme="black">
-              { F7Utils.IsLargeScreen(app) &&
+              { this.state.IsLargeScreen &&
                 <Searchbar
                   inline
                   customSearch
@@ -276,7 +285,7 @@ export default class extends React.Component {
           }
         </Navbar>
   
-        { !F7Utils.IsLargeScreen(app) &&
+        { !this.state.isLargeScreen &&
           <Searchbar
             customSearch
             backdrop
@@ -297,7 +306,7 @@ export default class extends React.Component {
             <Icon slot="media" ios="f7:logo_github" aurora="f7:logo_github" md="f7:logo_github"></Icon>
           </Chip></Link>
         
-          { !F7Utils.IsLargeScreen(app) &&
+          { !this.state.isLargeScreen &&
             <>
               <AccordionItem key={0}>
                 <AccordionToggle>
@@ -316,7 +325,7 @@ export default class extends React.Component {
             </>
           }
         
-          { F7Utils.IsLargeScreen(app) &&
+          { this.state.isLargeScreen &&
             <HomePageMenuLinks userId={ this.props.userId } favorites={ this.props.favorites } latest={ this.props.latest } quizzes={ this.props.quizzes } />
           }
 
@@ -369,33 +378,33 @@ export default class extends React.Component {
         }
 
         { this.state.content &&
-          <Row className="justify-content-flex-start">
+          <div className="row justify-content-flex-start">
             {this.state.content.map((content, index) => {
               const contentAnalytics = this.state.contentAnalytics ? this.state.contentAnalytics.find(item => DatabaseRequest.GetId(DatabaseRequest.GetValue(item, "content")) == DatabaseRequest.GetId(content)) : null;
               return (
                 <ContentCard key={ DatabaseRequest.GetId(content) } content={ content } contentAnalytics={ contentAnalytics } showCollectionTitle={ true } />
               )}
             )}
-          </Row>
+          </div>
         }
 
         { this.state.loading &&
-          <Row className="justify-content-flex-start">
+          <div className="row justify-content-flex-start">
             <ContentCard/>
-          </Row>
+          </div>
         }
 
         { !DatabaseRequest.GetCurrentUser() &&
           <Block className="text-align-center">
             <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
             <br />
-            2019 &copy; Nehloo Interactive LLC
+            2019 &copy; Nehloo Foundation, Inc.
             <br /><br />
           </Block>
         }
 
         {/* <Block className="no-margin-top padding-top text-align-center">
-          Powered by <img valign="middle" alt="" src="/static/img/look-education-sticker.png" height="30" />
+          Powered by <img valign="middle" alt="" src="./img/look-education-sticker.png" height="30" />
         </Block> */}
 
         {/* login */}
@@ -464,7 +473,7 @@ export default class extends React.Component {
             </Block>
           </Page>
         </Popup>
-      </Page >
+      </Page>
     );
   }
 }

@@ -1,6 +1,6 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
@@ -15,7 +15,7 @@ export default class CollectionPageAuthor extends Component {
 
     var logo = DatabaseRequest.GetValue(this.props.user, 'logo');
     if (!logo) {
-      logo = '/static/img/user-logo.png';
+      logo = './img/user-logo.png';
     }
 
     const url = this.props.isOwner ? ("/" + DatabaseRequest.GetId(this.props.user)) : ("/" + DatabaseRequest.GetId(this.props.user) + "/analytics/" + this.props.topCollectionId);

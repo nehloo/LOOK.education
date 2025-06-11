@@ -1,11 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React, { Component } from 'react';
-import { Block, Link, Row, Col, Card, CardContent, CardHeader, CardFooter, Button, Icon, List, ListInput } from 'framework7-react';
+import { Block, Link, Card, CardContent, CardHeader, CardFooter, Button, Icon, List, ListInput } from 'framework7-react';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest';
 
@@ -79,13 +79,13 @@ export default class CollectionPageAccessDenied extends Component {
     return (
       <>
       <Block>
-        <Row className="justify-content-flex-start">
+        <div className="row justify-content-flex-start">
           <Col></Col>
-          <Col width="100" tabletWidth="33" className="margin-bottom">
+          <div tabletWidth="33" className="col-100 margin-bottom">
             <Card className="elevation-5 elevation-hover-10 elevation-transition">
               <CardHeader className="no-border">
                 <div className="truncated">
-                  <img alt="" className="rounded bordered" style={{ opacity:0.4 }} src="/static/img/user-logo.png" width="34" height="34" valign="middle" />
+                  <img alt="" className="rounded bordered" style={{ opacity:0.4 }} src="./img/user-logo.png" width="34" height="34" valign="middle" />
                   &nbsp; Undisclosed Owner
                 </div>
               </CardHeader>
@@ -138,14 +138,14 @@ export default class CollectionPageAccessDenied extends Component {
                 </span>
               </CardFooter>
             </Card>
-          </Col>
+          </div>
           <Col></Col>
-        </Row>
+        </div>
       </Block>
       <Block className="text-align-center">
         <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
         <br />
-        2019 &copy; Nehloo Interactive LLC
+        2019 &copy; Nehloo Foundation, Inc.
         <br /><br />
       </Block>
       </>

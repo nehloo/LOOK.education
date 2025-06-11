@@ -1,3 +1,9 @@
+# User custom config files
+parse-dashboard-config.json
+
+# Unused files
+*.bak
+
 # Logs
 logs
 *.log
@@ -6,6 +12,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime data
+package-lock.json
 pids
 *.pid
 *.seed

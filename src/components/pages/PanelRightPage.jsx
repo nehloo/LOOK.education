@@ -1,6 +1,6 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
@@ -84,7 +84,7 @@ export default class extends React.Component {
             <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank"><b>LOOK.education</b></Link>
             <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">Open-source Visual LMS</Link>
             <br />
-            2019 &copy; Nehloo Interactive LLC
+            2019 &copy; Nehloo Foundation, Inc.
             <br /><br />
           </Block>
         }

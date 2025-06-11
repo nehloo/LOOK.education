@@ -1,11 +1,11 @@
 /**
  * @package    look-education
- * @copyright  Copyright Nehloo Interactive LLC
+ * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
 
 import React from 'react'
-import { Page, Navbar, NavLeft, Block, BlockTitle, ListInput, List, Chip, ListItem, AccordionContent, Link, Row, Col, Icon, Button } from 'framework7-react'
+import { Page, Navbar, NavLeft, Block, BlockTitle, ListInput, List, Chip, ListItem, AccordionContent, Link, Icon, Button } from 'framework7-react'
 
 import * as Scroll from 'react-scroll'
 
@@ -427,14 +427,14 @@ export default class QuizEditPage extends React.Component {
           <NavLeft colorTheme="black" style={{ width:"40px", height:"32px" }}>
             <Link back colorTheme="white" animate={DatabaseRequest.GetCurrentUser() ? !DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "accessibilityReduceMotion") : false}>
               <Icon f7="arrow_left" className="margin-right"></Icon>
-              <img alt="" src="/static/img/look-education-sticker.png" height="24" />
+              <img alt="" src="./img/look-education-sticker.png" height="24" />
             </Link>
           </NavLeft>
         </Navbar>
 
         { videoUrl &&
-        <Row>
-          <Col width="100" tabletWidth="50" desktopWidth="50" className="elevation-10 margin-bottom" style={{ position:"-webkit-sticky", position:"sticky", top:0, zIndex:20000, backgroundColor:"#171717" }}>
+        <div className="row">
+          <div tabletWidth="50" desktopWidth="50" className="col-100 elevation-10 margin-bottom sticky">
 
             <ReactPlayer url={ videoUrl } playsinline controls width="100%" className="video-quiz"
               ref={player => this.player = player}
@@ -467,9 +467,9 @@ export default class QuizEditPage extends React.Component {
 
             <Button fill large onClick={ this.pauseToAskQuestion }>{ this.state.progress ? ('Ask A Question At ' + this.state.progress) : 'Play Video' }</Button>
 
-          </Col>
+          </div>
 
-          <Col width="100" tabletWidth="50" desktopWidth="50" bgColor="white" textColor="black" className="padding">
+          <div tabletWidth="50" desktopWidth="50" bgColor="white" textColor="black" className="col-100 padding">
 
             <h3 className="no-margin-top">{ DatabaseRequest.GetValue(this.state.content, "title") }</h3>
 
@@ -562,12 +562,11 @@ export default class QuizEditPage extends React.Component {
                         { DatabaseRequest.GetValue(question, "type") == "openEnded" &&
                           <List className="no-margin-vertical">
                             <ListInput
-                              className="no-padding"
+                              className="no-padding elevation-3"
                               colorTheme="black"
                               type="textarea"
                               disabled
                               value="The respondent will enter a open-ended text or essay. The answer cannot be evaluated automatically."
-                              className="elevation-3"
                             />
                           </List>
                         }
@@ -630,9 +629,9 @@ export default class QuizEditPage extends React.Component {
               </div>
             )}
 
-          </Col>
+          </div>
           
-        </Row>
+        </div>
         }
 
       </Page>
