@@ -79,6 +79,26 @@ VITE_APP_PARSE_SERVER_APP_ID=YOUR_APP_ID
 npm start
 ```
 
+## Deployment Notes (Back4App)
+
+This project uses a Dockerfile for automated deployment on Back4App and uses environment variables for configuration.
+
+- Parse Server entry point: `npm start`
+- Cloud Code: in `cloud/main.js`
+- Public assets: in `public/`
+
+Ensure your `.env` or Back4App environment variables include:
+- `APP_ID`
+- `MASTER_KEY`
+- `DATABASE_URI`
+- `PUBLIC_SERVER_URL`
+
+To run locally, type this in terminal: docker-compose up --build
+
+Once running:
+	•	Dashboard: http://localhost:4040
+	•	Server: http://localhost:1337/parse
+
 ## Issues
 
 Please log any issues to the main [repo](https://github.com/nehloo/LOOK.education/issues).
@@ -112,6 +132,6 @@ LOOK.education is a nonprofit initiative focused on public benefit, open-source 
 👉 Donate via PayPal
 Every contribution helps sustain our open educational tools.
 
-💬 Note: LOOK.education is owned by a nonprofit organization registered in Indiana, USA. Your donations support our open-source work and operations but are not tax-deductible under U.S. law.
+💬 Note: LOOK.education is owned by a nonprofit organization registered in the State of Indiana, USA. Your donations support our open-source work and operations but are not tax-deductible under U.S. law.
 
 [![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate?hosted_button_id=CDP74NFWPVMPN)

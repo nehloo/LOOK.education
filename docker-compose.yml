@@ -1,0 +1,39 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  parse-server:
+    build: .
+    restart: always
+    ports:
+      - "1337:1337"
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+
+  parse-dashboard:
+    image: parseplatform/parse-dashboard
+    restart: always
+    ports:
+      - "4040:4040"
+    environment:
+      - PARSE_DASHBOARD_ALLOW_INSECURE_HTTP=1
+      - PARSE_DASHBOARD_PORT=4040
+      - PARSE_DASHBOARD_APP_ID=${APP_ID}
+      - PARSE_DASHBOARD_MASTER_KEY=${MASTER_KEY}
+      - PARSE_DASHBOARD_SERVER_URL=http://parse-server:1337/parse
+      - PARSE_DASHBOARD_USER=admin
+      - PARSE_DASHBOARD_PASSWORD=admin
+    depends_on:
+      - parse-server
+
+volumes:
+  mongo-data:

@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "LOOK.education",
+  "main": "index.js",
   "repository": "",
   "license": "SEE LICENSE in the root directory",
   "framework7": {
@@ -23,7 +24,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "postinstall": "cpy './node_modules/framework7-icons/fonts/*.*' './src/fonts/'"
+    "postinstall": "cpy './node_modules/framework7-icons/fonts/*.*' './src/fonts/'",
+    "start": "parse-server --appId $APP_ID --masterKey $MASTER_KEY --databaseURI $DATABASE_URI --cloud ./cloud/main.js --publicServerURL $PUBLIC_SERVER_URL --port 1337"
   },
   "browserslist": [
     "Android >= 5",
