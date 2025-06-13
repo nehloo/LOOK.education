@@ -14,6 +14,13 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 5. No Warranty. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
 
+6. Required Disclosure of Modifications:
+If you make any modifications to the Software for use within your organization (whether for internal training, evaluation, or other Noncommercial Purposes), you must make those modifications publicly available under the same license terms. You may do so by:
+	•	Submitting a pull request to the original project repository, or
+	•	Publishing your modified version in a publicly accessible code repository (e.g., GitHub), or
+	•	Sending a copy of the changes to the Licensor directly.
+This obligation applies whether or not you distribute the Software.
+
 For full terms, see the base license at: https://polyformproject.org/licenses/noncommercial/1.0.0/
 
 This modified license is not OSI-approved and is intended to reflect additional permission beyond the standard Polyform Noncommercial License.
