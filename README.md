@@ -95,6 +95,23 @@ If you are a third-party IT company able to provide support for installing and/o
 
 ## 📝 License
 
-This project is licensed under the **Polyform Noncommercial License 1.0.0 with Internal Training Exception**.  
-See the [LICENSE](./LICENSE) file for full terms.
+This project is licensed under the **Polyform Noncommercial License 1.0.0 with Internal Training Exception**.
+
+- You **may use** this software for educational, personal, or internal training purposes.
+- **Commercial use**, redistribution, or monetization of this software is **not allowed**.
+- See [LICENSE](./LICENSE) for full legal terms.
+
 ![License](https://img.shields.io/badge/license-Polyform--Noncommercial-orange)
+
+## 💖 Support This Project
+
+This project is open-source under a custom noncommercial license.  
+
+LOOK.education is a nonprofit initiative focused on public benefit, open-source software, and public and/or internal training tools. If you’d like to support ongoing development, documentation, or hosting, you can make a donation via PayPal:
+
+👉 Donate via PayPal
+Every contribution helps sustain our open educational tools.
+
+💬 Note: LOOK.education is owned by a nonprofit organization registered in Indiana, USA. Your donations support our open-source work and operations but are not tax-deductible under U.S. law.
+
+[![Donate via PayPal](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate?hosted_button_id=CDP74NFWPVMPN)
