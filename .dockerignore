@@ -2,5 +2,4 @@ node_modules
 public
 src
 .git
-Dockerfile
-nginx.conf
+*.log
