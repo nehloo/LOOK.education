@@ -1,18 +1,11 @@
-# Use Node.js 18 LTS base image
-FROM node:18
+FROM nginx:alpine
 
-# Set working directory
-WORKDIR /usr/src/app
+# Copy custom NGINX config (optional)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy dependency files and install
-COPY package*.json ./
-RUN npm install
+# Copy built React app
+COPY dist/ /usr/share/nginx/html
 
-# Copy the rest of the app
-COPY . .
+EXPOSE 80
 
-# Expose the port Parse Server will run on
-EXPOSE 1337
-
-# Start Parse Server
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]

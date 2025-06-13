@@ -418,11 +418,15 @@ const DatabaseRequest = {
   */
   UserSignUp: async (data) => {
     try {
+      //console.log("Creating user...");
       var user = new Parse.User();
+      //console.log(user);
       for (var [key, value] of Object.entries(data)) {
         user.set(key, value);
       }
+      console.log("Attempting signing up...");
       await user.signUp();
+      console.log("User is signed up!");
       return user;
     }
     catch(error) {
@@ -659,7 +663,9 @@ const DatabaseRequest = {
   |
   */
   FetchObjects: async (dict) => {
+    //console.log("Fetching objects...");
     const query = DatabaseRequest.CreateQuery(dict);
+    //console.log(query);
     if (dict["limit"] == 1) {
       const object = await query.first();
       return object;

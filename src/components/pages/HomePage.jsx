@@ -348,11 +348,14 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
             <List form>
               <ListInput
                 ref={refEmail}
-                label="E-mail"
+                label="Email"
                 type="email"
-                placeholder="Your email"
+                placeholder="you@example.com"
+                name="email"
+                autocomplete="email"
                 className="text"
                 value={email}
+                required
                 onInput={(e) => {
                   setEmail(e.target.value.toLowerCase());
                 }}
@@ -360,8 +363,11 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
               <ListInput
                 label="Password"
                 type="password"
-                placeholder="Your password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="Your secure password"
                 value={password}
+                required
                 onInput={(e) => {
                   setPassword(e.target.value);
                 }}
