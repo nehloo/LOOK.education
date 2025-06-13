@@ -3,9 +3,13 @@
  * @copyright  Copyright Nehloo Foundation, Inc.
  * @license    https://github.com/look-education/look-education/blob/master/LICENSE
  */
+import Framework7 from 'framework7/lite-bundle';
 
-import React from 'react';
-import { Page, Navbar, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar, ListInput, List, Button, AccordionItem, AccordionToggle, AccordionContent } from 'framework7-react';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  Page, Navbar, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar,
+  ListInput, List, Button, AccordionItem, AccordionToggle, AccordionContent
+} from 'framework7-react';
 
 import CollectionList from './CollectionList';
 import HomePageMenuLinks from './HomePageMenuLinks';
@@ -15,465 +19,388 @@ import DatabaseRequest from "../frameworks/DatabaseRequest";
 import F7Utils from "../utils/F7Utils";
 import CollectionUtils from '../utils/CollectionUtils';
 
-export default class HomePage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: '',
-      brand: '',
-      popupOpened: false,
-      btnLogin: true,
-      btnSignup: false,
-      brandField: false,
-      searchTerm: this.props.searchTerm ? this.props.searchTerm.replace("+", " ") : null,
-      content: null,
-      contentAnalytics: null,
-      loading: false
-    };
-    this.searchTimeout = null;
-    this.openLoginPopup = this.openLoginPopup.bind(this);
-    this.closeLoginPopup = this.closeLoginPopup.bind(this);
-    this.resetPassword = this.resetPassword.bind(this);
-    this.resetLoginScreen = this.resetLoginScreen.bind(this);
-    this.resetSignupScreen = this.resetSignupScreen.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+export default function HomePage({ latest, favorites, quizzes, ...props }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [brand, setBrand] = useState('');
+  const [popupOpened, setPopupOpened] = useState(false);
+  const [btnLogin, setBtnLogin] = useState(true);
+  const [btnSignup, setBtnSignup] = useState(false);
+  const [brandField, setBrandField] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(props.searchTerm ? props.searchTerm.replace("+", " ") : null);
+  const [content, setContent] = useState(null);
+  const [contentAnalytics, setContentAnalytics] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(undefined);
 
-  handleSubmit = async () => {
+  const timeoutRef = useRef(null);
+  const refEmail = useRef(null);
 
-    let app = this.$f7;
+  useEffect(() => {
+    const f7 = Framework7.instance;
+    if (!f7) {
+      console.error("Framework7 instance is not initialized.");
+      return;
+    }
 
-    var user = await DatabaseRequest.FetchObjects({
+    setIsLargeScreen(F7Utils.IsLargeScreen(f7));
+
+    if (props.searchTerm) {
+      F7Utils.SetDocumentTitle(props.searchTerm);
+      fetchSearchContent(props.searchTerm);
+    } else if (props.latest || props.quizzes) {
+      fetchLatestContent();
+    }
+  }, []);
+
+  const fetchLatestContent = async () => {
+    setLoading(true);
+    F7Utils.SetDocumentTitle("Latest Content");
+    const result = await CollectionUtils.FetchLatestContent({ quizzes: props.quizzes });
+    const analytics = result ? await CollectionUtils.FetchContentAnalyticsForContentList(result) : null;
+    setContent(result);
+    setContentAnalytics(analytics);
+    setSearchTerm(null);
+    setLoading(false);
+  };
+
+  const fetchSearchContent = async (term) => {
+    if (!term) return;
+    setLoading(true);
+    const cleanTerm = term.replace("+", " ");
+    F7Utils.SetDocumentTitle(cleanTerm);
+    const result = await CollectionUtils.FetchSearchContent(cleanTerm);
+    const analytics = result ? await CollectionUtils.FetchContentAnalyticsForContentList(result) : null;
+    setContent(result);
+    setContentAnalytics(analytics);
+    setSearchTerm(cleanTerm);
+    setLoading(false);
+  };
+
+  const searchExecute = async (term) => {
+    const actualTerm = term || null;
+    setSearchTerm(actualTerm);
+    setContent(null);
+    setContentAnalytics(null);
+    if (!actualTerm && props.latest) {
+      fetchLatestContent();
+    } else if (actualTerm) {
+      fetchSearchContent(actualTerm);
+    }
+  };
+
+  const handleSearch = (searchbar, query, previousQuery) => {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => searchExecute(query), 500);
+  };
+
+  const resetLoginScreen = () => {
+    setPassword('');
+    setBrandField(false);
+    setBtnLogin(true);
+    setBtnSignup(false);
+  };
+
+  const resetSignupScreen = () => {
+    setPassword('');
+    setBrandField(true);
+    setBtnLogin(false);
+    setBtnSignup(true);
+  };
+
+  const handleSubmit = async () => {
+    const user = await DatabaseRequest.FetchObjects({
       class: "User",
-      equalTo: {
-        email: this.state.email
-      },
+      equalTo: { email },
       limit: 1
     });
+
     if (user) {
-      if (this.state.password !== '') {
-        this.logIn();
+      if (password !== '') {
+        logIn();
+      } else {
+        f7.dialog.alert("", "Enter your password");
+        setBrandField(false);
+        setBtnLogin(true);
+        setBtnSignup(false);
       }
-      else {
-        app.dialog.alert("", "Enter your password", () => {
-        });
-        this.setState({ brandField: false, btnLogin: true, btnSignup: false });
-      }
-    }
-    else {
-      if (this.state.password !== '' && this.state.brand !== '') {
-        this.signUp();
-      }
-      else {
-        if (this.state.brandField) {
-          app.dialog.alert("", "Enter your password and username", () => {
-          });
+    } else {
+      if (password !== '' && brand !== '') {
+        signUp();
+      } else {
+        if (brandField) {
+          f7.dialog.alert("", "Enter your password and username");
         }
-        this.setState({ brandField: true, btnSignup: true, btnLogin: false });
+        setBrandField(true);
+        setBtnSignup(true);
+        setBtnLogin(false);
       }
     }
-  }
+  };
 
-  signUp = async() => {
-
-    let self = this;
-    let app = self.$f7;
-
-    const user = await DatabaseRequest.UserSignUp({
-      username: this.state.email,
-      password: this.state.password,
-      email: this.state.email,
-      brand: this.state.brand
-    });
+  const signUp = async () => {
+    const user = await DatabaseRequest.UserSignUp({ username: email, password, email, brand });
     if (user) {
-      //this.setState({ popupOpened: false });
-      DatabaseRequest.LogUserAction({
-        "action": "signup"
-      });
-      app.dialog.alert("User account created. Click OK to set up your new account.", "Welcome to LOOK.education", () => {
-        //app.loginScreen.close();
+      DatabaseRequest.LogUserAction({ action: "signup" });
+      f7.dialog.alert("User account created. Click OK to set up your new account.", "Welcome to LOOK.education", () => {
         window.location.reload();
-        // TODO: refresh the collections list, now that the user signed up... or better, reload the entire page
       });
+    } else {
+      f7.loginScreen.close();
     }
-    else {
-      app.loginScreen.close();
-    }
-  }
+  };
 
-  logIn = async() => {
-
-    let app = this.$f7;
-
-    const user = await DatabaseRequest.UserLogIn(this.state.email, this.state.password);
+  const logIn = async () => {
+    const user = await DatabaseRequest.UserLogIn(email, password);
     if (user.error) {
-      app.dialog.alert(user.error, "Can't log in", () => {
-      });
+      f7.dialog.alert(user.error, "Can't log in");
+    } else {
+      DatabaseRequest.LogUserAction({ action: "login" });
+      window.location.reload();
     }
-    else {
-      //this.setState({ popupOpened:false });
-        //app.loginScreen.close();
-        DatabaseRequest.LogUserAction({
-          "action": "login"
-        });
-        window.location.reload();
-        // TODO: refresh the collections list, now that the user logged in... or better, reload the entire page
-    }
-  }
+  };
 
-  logOut = async() => {
+  const logOut = async () => {
     const user = DatabaseRequest.GetCurrentUser();
     await DatabaseRequest.UserLogOut();
-    DatabaseRequest.LogUserAction({
-      "action": "logout",
-      "user": user
-    });
+    DatabaseRequest.LogUserAction({ action: "logout", user });
     window.location.reload();
-    // TODO: refresh the collections list, now that the user logged out... or better, reload the entire page
-  }
+  };
 
-  resetLoginScreen = () => {
-    this.setState({ password:'', brandField:false, btnLogin:true, btnSignup:false });
-  }
-
-  resetSignupScreen = () => {
-    this.setState({ password:'', brandField:true, btnLogin:false, btnSignup:true });
-  }
-
-  openLoginPopup() {
-    this.setState({ popupOpened: true });
-  }
-
-  closeLoginPopup() {
-    this.setState({ popupOpened: false });
-  }
-
-  resetPassword = async () => {
-    if (!this.state.email) {
-      if (this.refEmail) this.refEmail.setState({ inputInvalid:true });
+  const resetPassword = async () => {
+    if (!email) {
+      if (refEmail.current) refEmail.current.setState({ inputInvalid: true });
       return;
     }
-    let app = this.$f7;
-
-    if (!await DatabaseRequest.UserRequestPasswordReset(this.state.email)) {
-      app.dialog.alert("Error: " + error.code + " " + error.message, () => {
-      });
+    if (!await DatabaseRequest.UserRequestPasswordReset(email)) {
+      f7.dialog.alert("Error: couldn't request password reset");
     }
-    //this.resetUserForm();
-    app.dialog.alert(this.state.email + "<br /><br />Verify your inbox, and follow the email instructions to reset your JuniorTube password.<br /><br />The email will come from <a href='mailto:support@look.education'>support@look.education</a>, make sure you look in both Spam and Inbox folders.", "Password Reset", () => {
-    });
+    f7.dialog.alert(`${email}<br /><br />Verify your inbox to reset your password.<br /><br />Check Spam & Inbox folders.`, "Password Reset");
+  };
+
+  if (isLargeScreen === undefined) {
+    console.warn("🕐 Waiting for isLargeScreen check");
+    return null;
   }
 
-  /* shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.content != this.state.content) {
-      return true;
-    }
-    if (nextState.popupOpened != this.state.popupOpened) {
-      return true;
-    }
-    if (nextState.popupClose != this.state.popupClose) {
-      return true;
-    }
-    return false;
-  } */
+  return (
+    <Page name="home">
+      <Navbar bgColor="white">
+        <NavTitle colorTheme="black">
+          <Link className={ isLargeScreen ? "" : "no-padding-left" } href="/" external><img src="./img/look-education-sticker.png" height="50" /></Link>
+        </NavTitle>
+        { DatabaseRequest.GetCurrentUser() &&
+          <NavRight colorTheme="black">
+            { IsLargeScreen &&
+              <Searchbar
+                inline
+                customSearch
+                backdrop
+                placeholder="Find content..."
+                disableButton={!$theme.aurora}
+                onSearchbarSearch={ (searchbar, query, previousQuery) => {
+                  search(searchbar, query, previousQuery);
+                }}
+              ></Searchbar>
+            }
+            <Link panelOpen="right"><img className="rounded" alt="" src={ DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") } height="38" valign="middle" /></Link>
+          </NavRight>
+        }
+        { !DatabaseRequest.GetCurrentUser() &&
+          <NavRight colorTheme="black">
+            <Link onClick={() => setPopupOpened(true)}><img className="rounded" alt="" src={ DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") } height="38" valign="middle" /></Link>
+          </NavRight>
+        }
+      </Navbar>
 
-  search = async (searchbar, query, previousQuery) => {
-    var self = this;
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(function () {
-      self.searchExecute(query);
-    }, 500);
-  }
-
-  searchExecute = async (searchTerm) => {
-    if (!searchTerm || searchTerm == undefined) searchTerm = null;
-    this.setState({ searchTerm:searchTerm, content:null, contentAnalytics:null });
-    if (!searchTerm && this.props.latest) {
-      this.fetchLatestContent();
-    }
-    else {
-      if (searchTerm) {
-        this.fetchSearchContent(searchTerm);
+      { !isLargeScreen &&
+        <Searchbar
+          customSearch
+          backdrop
+          placeholder="Find content..."
+          disableButton={!$theme.aurora}
+          onSearchbarSearch={ (searchbar, query, previousQuery) => {
+            search(searchbar, query, previousQuery);
+          }}
+        ></Searchbar>
       }
-    }
-  }
 
-  fetchSearchContent = async (searchTerm) => {
-    if (!searchTerm) {
-      return;
-    }
-    this.setState({ loading:true });
-    searchTerm = searchTerm.replace("+", " ");
-    F7Utils.SetDocumentTitle(searchTerm);
-    const content = await CollectionUtils.FetchSearchContent(searchTerm);
-    var contentAnalytics;
-    if (content) {
-      contentAnalytics = await CollectionUtils.FetchContentAnalyticsForContentList(content);
-    }
-    this.setState({ loading:false, searchTerm:searchTerm, content:content, contentAnalytics:contentAnalytics });
-  }
+      <div style={{ zIndex:"-10000", position:"absolute", top:0, width:"100%", height:"50%", opacity:0.1, backgroundImage:"linear-gradient(black, white)" }}></div>
 
-  fetchLatestContent = async () => {
-    this.setState({ loading:true });
-    F7Utils.SetDocumentTitle("Latest Content");
-    const content = await CollectionUtils.FetchLatestContent({
-      quizzes: this.props.quizzes
-    });
-    var contentAnalytics;
-    if (content) {
-      contentAnalytics = await CollectionUtils.FetchContentAnalyticsForContentList(content);
-    }
-    this.setState({ loading:false, searchTerm:null, content:content, contentAnalytics:contentAnalytics });
-  }
+      <br />
 
-  componentDidMount() {
-
-    console.log("componentDidMount");
-
-    this.app = this.$f7;
-    const isLargeScreen = F7Utils.IsLargeScreen(this.app);
-    this.setState({ isLargeScreen });
-    
-    if (this.props.searchTerm) {
-      F7Utils.SetDocumentTitle(this.props.searchTerm);
-      this.fetchSearchContent(this.props.searchTerm);
-    }
-    if (this.props.latest || this.props.quizzes) {
-      this.fetchLatestContent();
-    }
-  }
-
-  render() {
-
-    console.log("render");
-
-    if (this.state.isLargeScreen === undefined) return null;
-
-    var userLogo = DatabaseRequest.GetCurrentUser() ? DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") : null;
-    if (!userLogo) {
-      userLogo = './img/user-logo.png';
-    }
-
-    return (
-      <Page>
-        <Navbar bgColor="white">
-          <NavTitle colorTheme="black">
-            <Link className={ this.state.isLargeScreen ? "" : "no-padding-left" } href="/" external><img src="./img/look-education-sticker.png" height="50" /></Link>
-          </NavTitle>
-          { DatabaseRequest.GetCurrentUser() &&
-            <NavRight colorTheme="black">
-              { this.state.IsLargeScreen &&
-                <Searchbar
-                  inline
-                  customSearch
-                  backdrop
-                  placeholder="Find content..."
-                  disableButton={!this.$theme.aurora}
-                  onSearchbarSearch={ (searchbar, query, previousQuery) => {
-                    this.search(searchbar, query, previousQuery);
-                  }}
-                ></Searchbar>
-              }
-              <Link panelOpen="right"><img className="rounded" alt="" src={ userLogo } height="38" valign="middle" /></Link>
-            </NavRight>
-          }
-          { !DatabaseRequest.GetCurrentUser() &&
-            <NavRight colorTheme="black">
-              <Link onClick={ this.openLoginPopup }><img className="rounded" alt="" src={ userLogo } height="38" valign="middle" /></Link>
-            </NavRight>
-          }
-        </Navbar>
-  
-        { !this.state.isLargeScreen &&
-          <Searchbar
-            customSearch
-            backdrop
-            placeholder="Find content..."
-            disableButton={!this.$theme.aurora}
-            onSearchbarSearch={ (searchbar, query, previousQuery) => {
-              this.search(searchbar, query, previousQuery);
-            }}
-          ></Searchbar>
+      <Block className="no-margin-top no-margin-bottom">
+        <Link noLinkClass href="https://github.com/nehloo/LOOK.education" target="_blank" className="external float-right margin-right"><Chip className="elevation-hover-3 elevation-transition margin-left" text="Contribute" mediaBgColor="gray" style={{ cursor:"pointer" }}>
+          <Icon slot="media" ios="f7:logo_github" aurora="f7:logo_github" md="f7:logo_github"></Icon>
+        </Chip></Link>
+      
+        { !isLargeScreen &&
+          <>
+            <AccordionItem key={0}>
+              <AccordionToggle>
+                <Chip className="margin-left" text="Action Menu" color="yellow" textColor="black" mediaBgColor="black" style={{ cursor:"pointer" }}>
+                  <Icon slot="media" ios="f7:menu" aurora="f7:menu" md="f7:bars"></Icon>
+                </Chip>
+                <Link animate={false} noLinkClass href={ props.latest ? "/" : "/latest" }><Chip className="elevation-hover-3 elevation-transition margin-left" text="" mediaBgColor="teal">
+                  <Icon slot="media" f7={ props.latest ? "layers_alt_fill" : "timer" }></Icon>
+                </Chip></Link>
+              </AccordionToggle>
+              <AccordionContent>
+                <br />
+                <HomePageMenuLinks userId={ props.userId } favorites={ props.favorites } latest={ props.latest } quizzes={ props.quizzes } onePerLine={ true } />
+              </AccordionContent>
+            </AccordionItem>
+          </>
+        }
+      
+        { isLargeScreen &&
+          <HomePageMenuLinks userId={ props.userId } favorites={ props.favorites } latest={ props.latest } quizzes={ props.quizzes } />
         }
 
-        <div style={{ zIndex:"-10000", position:"absolute", top:0, width:"100%", height:"50%", opacity:0.1, backgroundImage:"linear-gradient(black, white)" }}></div>
+      </Block>
 
-        <br />
+      <br />
 
-        <Block className="no-margin-top no-margin-bottom">
-          <Link noLinkClass href="https://github.com/nehloo/look-education" target="_blank" className="external float-right margin-right"><Chip className="elevation-hover-3 elevation-transition margin-left" text="Contribute" mediaBgColor="gray" style={{ cursor:"pointer" }}>
-            <Icon slot="media" ios="f7:logo_github" aurora="f7:logo_github" md="f7:logo_github"></Icon>
-          </Chip></Link>
-        
-          { !this.state.isLargeScreen &&
-            <>
-              <AccordionItem key={0}>
-                <AccordionToggle>
-                  <Chip className="margin-left" text="Action Menu" color="yellow" textColor="black" mediaBgColor="black" style={{ cursor:"pointer" }}>
-                    <Icon slot="media" ios="f7:menu" aurora="f7:menu" md="f7:bars"></Icon>
-                  </Chip>
-                  <Link animate={false} noLinkClass href={ this.props.latest ? "/" : "/latest" }><Chip className="elevation-hover-3 elevation-transition margin-left" text="" mediaBgColor="teal">
-                    <Icon slot="media" f7={ this.props.latest ? "layers_alt_fill" : "timer" }></Icon>
-                  </Chip></Link>
-                </AccordionToggle>
-                <AccordionContent>
-                  <br />
-                  <HomePageMenuLinks userId={ this.props.userId } favorites={ this.props.favorites } latest={ this.props.latest } quizzes={ this.props.quizzes } onePerLine={ true } />
-                </AccordionContent>
-              </AccordionItem>
-            </>
-          }
-        
-          { this.state.isLargeScreen &&
-            <HomePageMenuLinks userId={ this.props.userId } favorites={ this.props.favorites } latest={ this.props.latest } quizzes={ this.props.quizzes } />
-          }
-
+      { !DatabaseRequest.GetCurrentUser() &&
+        <Block>
+          <Button color="blue" large fill raised outline className="margin-horizontal margin-vertical" onClick={() => setPopupOpened(true)}><b>Join LOOK.education</b></Button>
         </Block>
+      }
 
-        <br />
+      { props.latest && !searchTerm &&
+        <Block className="no-margin-vertical">
+          <h1>Latest Content</h1>
+        </Block>
+      }
 
-        { !DatabaseRequest.GetCurrentUser() &&
-          <Block>
-            <Button color="blue" large fill raised outline className="margin-horizontal margin-vertical" onClick={ this.openLoginPopup }><b>Join LOOK.education</b></Button>
-          </Block>
-        }
+      { props.userId && !searchTerm &&
+        <Block className="no-margin-vertical">
+          <h1>
+            { props.userId == DatabaseRequest.GetId(DatabaseRequest.GetCurrentUser()) &&
+              <>My Collections</>
+            }
+          </h1>
+        </Block>
+      }
 
-        { this.props.latest && !this.state.searchTerm &&
-          <Block className="no-margin-vertical">
-            <h1>Latest Content</h1>
-          </Block>
-        }
+      { props.quizzes && !searchTerm &&
+        <Block className="no-margin-vertical">
+          <h1>Quizzes &amp; Surveys</h1>
+        </Block>
+      }
 
-        { this.props.userId && !this.state.searchTerm &&
-          <Block className="no-margin-vertical">
-            <h1>
-              { this.props.userId == DatabaseRequest.GetId(DatabaseRequest.GetCurrentUser()) &&
-                <>My Collections</>
-              }
-            </h1>
-          </Block>
-        }
+      { props.favorites && !searchTerm &&
+        <Block className="no-margin-vertical">
+          <h1>My Favorites</h1>
+        </Block>
+      }
 
-        { this.props.quizzes && !this.state.searchTerm &&
-          <Block className="no-margin-vertical">
-            <h1>Quizzes &amp; Surveys</h1>
-          </Block>
-        }
+      { searchTerm &&
+        <Block className="no-margin-vertical">
+          <h1>"{ searchTerm }"</h1>
+        </Block>
+      }
 
-        { this.props.favorites && !this.state.searchTerm &&
-          <Block className="no-margin-vertical">
-            <h1>My Favorites</h1>
-          </Block>
-        }
+      { ((!props.latest && !props.quizzes) || searchTerm) &&
+        <CollectionList className="collectionList" userId={ props.userId } favorites={ props.favorites } searchTerm={ searchTerm } />
+      }
 
-        { this.state.searchTerm &&
-          <Block className="no-margin-vertical">
-            <h1>"{ this.state.searchTerm }"</h1>
-          </Block>
-        }
-
-        { ((!this.props.latest && !this.props.quizzes) || this.state.searchTerm) &&
-          <CollectionList className="collectionList" userId={ this.props.userId } favorites={ this.props.favorites } searchTerm={ this.state.searchTerm } />
-        }
-
-        { this.state.content &&
-          <div className="row justify-content-flex-start">
-            {this.state.content.map((content, index) => {
-              const contentAnalytics = this.state.contentAnalytics ? this.state.contentAnalytics.find(item => DatabaseRequest.GetId(DatabaseRequest.GetValue(item, "content")) == DatabaseRequest.GetId(content)) : null;
-              return (
-                <ContentCard key={ DatabaseRequest.GetId(content) } content={ content } contentAnalytics={ contentAnalytics } showCollectionTitle={ true } />
-              )}
+      { content &&
+        <div className="row justify-content-flex-start">
+          {content.map((content, index) => {
+            const contentAnalytics = contentAnalytics ? contentAnalytics.find(item => DatabaseRequest.GetId(DatabaseRequest.GetValue(item, "content")) == DatabaseRequest.GetId(content)) : null;
+            return (
+              <ContentCard key={ DatabaseRequest.GetId(content) } content={ content } contentAnalytics={ contentAnalytics } showCollectionTitle={ true } />
             )}
-          </div>
-        }
+          )}
+        </div>
+      }
 
-        { this.state.loading &&
-          <div className="row justify-content-flex-start">
-            <ContentCard/>
-          </div>
-        }
+      { loading &&
+        <div className="row justify-content-flex-start">
+          <ContentCard/>
+        </div>
+      }
 
-        { !DatabaseRequest.GetCurrentUser() &&
-          <Block className="text-align-center">
-            <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
-            <br />
-            2019 &copy; Nehloo Foundation, Inc.
-            <br /><br />
-          </Block>
-        }
+      { !DatabaseRequest.GetCurrentUser() &&
+        <Block className="text-align-center">
+          <Link color="blue" href="https://github.com/nehloo/LOOK.education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
+          <br />
+          {new Date().getFullYear()} &copy; Nehloo Foundation, Inc. / Nehloo Interactive
+          <br /><br />
+        </Block>
+      }
 
-        {/* <Block className="no-margin-top padding-top text-align-center">
-          Powered by <img valign="middle" alt="" src="./img/look-education-sticker.png" height="30" />
-        </Block> */}
+      {/* <Block className="no-margin-top padding-top text-align-center">
+        Powered by <img valign="middle" alt="" src="./img/look-education-sticker.png" height="30" />
+      </Block> */}
 
-        {/* login */}
+      {/* login */}
 
-        <Popup className="demo-popup" opened={ this.state.popupOpened } onPopupClose={ this.closeLoginPopup }>
-          <Page>
-            <Navbar title="My Account">
-              <NavRight>
-                <Link popupClose onClick={ this.resetLoginScreen }>Close</Link>
-              </NavRight>
-            </Navbar>
+      <Popup className="demo-popup" opened={ popupOpened } onPopupClose={() => setPopupOpened(false)}>
+        <Page>
+          <Navbar title="My Account">
+            <NavRight>
+              <Link popupClose onClick={ resetLoginScreen }>Close</Link>
+            </NavRight>
+          </Navbar>
+          <Block>
+            <List form>
+              <ListInput
+                ref={refEmail}
+                label="E-mail"
+                type="email"
+                placeholder="Your email"
+                className="text"
+                value={email}
+                onInput={(e) => {
+                  setEmail(e.target.value.toLowerCase());
+                }}
+              />
+              <ListInput
+                label="Password"
+                type="password"
+                placeholder="Your password"
+                value={password}
+                onInput={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+              {(brandField === true) &&
+                <ListInput
+                  label="Brand or Channel"
+                  type="text"
+                  placeholder="Your brand or channel name"
+                  value={brand}
+                  onInput={(e) => {
+                    setBrand(e.target.value);
+                  }}
+                />}
+            </List>
             <Block>
-              <List form>
-                <ListInput
-                  ref={(c) => this.refEmail = c}
-                  label="E-mail"
-                  type="email"
-                  placeholder="Your email"
-                  className="text"
-                  value={this.state.email}
-                  onInput={(e) => {
-                    this.setState({ email: e.target.value.toLowerCase() });
-                  }}
-                />
-                <ListInput
-                  label="Password"
-                  type="password"
-                  placeholder="Your password"
-                  value={this.state.password}
-                  onInput={(e) => {
-                    this.setState({ password: e.target.value });
-                  }}
-                />
-                {(this.state.brandField === true) &&
-                  <ListInput
-                    label="Brand or Channel"
-                    type="text"
-                    placeholder="Your brand or channel name"
-                    value={this.state.brand}
-                    onInput={(e) => {
-                      this.setState({ brand: e.target.value });
-                    }}
-                  />}
-              </List>
-              <Block>
-                { this.state.btnLogin  &&
-                  <>
-                  <Button raised large fill onClick={ this.handleSubmit }>Login</Button>
-                  <Button raised onClick={ this.resetPassword } className="margin-top">Forgot password?</Button>
-                  <br />
-                  <center>
-                    <Link onClick={ this.resetSignupScreen }>Create new account?</Link>
-                  </center>
-                  </>
-                }
-                { this.state.btnSignup  &&
-                  <>
-                  <Button raised large fill onClick={ this.handleSubmit }>SignUp</Button>
-                  <br />
-                  <center>
-                    <Link onClick={ this.resetLoginScreen }>Already have an account?</Link>
-                  </center>
-                  </>
-                }
-              </Block>
+              { btnLogin  &&
+                <>
+                <Button raised large fill onClick={ handleSubmit }>Login</Button>
+                <Button raised onClick={ resetPassword } className="margin-top">Forgot password?</Button>
+                <br />
+                <center>
+                  <Link onClick={ resetSignupScreen }>Create new account?</Link>
+                </center>
+                </>
+              }
+              { btnSignup  &&
+                <>
+                <Button raised large fill onClick={ handleSubmit }>SignUp</Button>
+                <br />
+                <center>
+                  <Link onClick={ resetLoginScreen }>Already have an account?</Link>
+                </center>
+                </>
+              }
             </Block>
-          </Page>
-        </Popup>
-      </Page>
-    );
-  }
+          </Block>
+        </Page>
+      </Popup>
+    </Page>
+  );
 }

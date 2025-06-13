@@ -1,5 +1,12 @@
 # User custom config files
 parse-dashboard-config.json
+ecosystem.config.js
+dashboard-server.js
+dashboard-server.mjs
+.npmrc
+
+# dotenv environment variables file
+.env
 
 # Unused files
 *.bak
@@ -12,6 +19,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime data
+pnpm-lock.yaml
 package-lock.json
 pids
 *.pid
@@ -61,9 +69,6 @@ typings/
 
 # Yarn Integrity file
 .yarn-integrity
-
-# dotenv environment variables file
-.env
 
 # next.js build output
 .next

@@ -132,5 +132,5 @@ export default [
     name: '404',
     path: '(.*)', // this is for 404 errors (page not found)
     component: NotFoundPage,
-  },
+  }
 ];

@@ -81,10 +81,10 @@ export default class extends React.Component {
         </List>
         { DatabaseRequest.GetCurrentUser() &&
           <Block>
-            <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank"><b>LOOK.education</b></Link>
-            <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">Open-source Visual LMS</Link>
+            <Link color="blue" href="https://github.com/nehloo/LOOK.education" external target="_blank"><b>LOOK.education</b></Link>
+            <Link color="blue" href="https://github.com/nehloo/LOOK.education" external target="_blank">Open-source Visual LMS</Link>
             <br />
-            2019 &copy; Nehloo Foundation, Inc.
+            {new Date().getFullYear()} &copy; Nehloo Foundation, Inc. / Nehloo Interactive
             <br /><br />
           </Block>
         }

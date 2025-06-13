@@ -9,6 +9,10 @@ export default defineConfig({
   define: {
     'process.env': {}, // safe fallback
   },
+  server: {
+    port: 3000,
+    hmr: false
+  },
   optimizeDeps: {
     esbuildOptions: {
       define: {
@@ -21,9 +25,6 @@ export default defineConfig({
         }),
       ],
     },
-  },
-  server: {
-    port: 3000
   },
   build: {
     outDir: 'dist',

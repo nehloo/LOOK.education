@@ -5,36 +5,36 @@
  */
 
 // Import React and ReactDOM
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 
 // Import Framework7
-import Framework7 from 'framework7/bundle';
+import Framework7 from 'framework7/lite-bundle';
 
 // Import Framework7-React Plugin
-import Framework7React from 'framework7-react';
+import Framework7React, { f7ready } from 'framework7-react';
 
 // Import Framework7 Styles
 import 'framework7/css/bundle';
+import 'framework7-icons/css/framework7-icons.css';
 
 // Import Icons and App Custom Styles
 import '../css/icons.css';
 import '../css/app.css';
 
-// Import App component
-import App from '../components/App.jsx';
-
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
 
+f7ready((f7) => {
+  // console.log("✅ Framework7 ready with routes:", f7.views.main.router.routes);
+});
+
+// Import App component
+import App from '../components/App.jsx';
+
 // Mount React App
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  createRoot(rootElement).render(<App />);
-  console.log("created root");
-} else {
-  console.error("❌ Could not find #root div");
-}
+const root = ReactDOM.createRoot(document.getElementById('app'));
+root.render(<App />);
 
 /* function insertGoogleAnalytics() {
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

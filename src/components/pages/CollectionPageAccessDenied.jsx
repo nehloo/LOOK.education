@@ -106,7 +106,7 @@ export default class CollectionPageAccessDenied extends Component {
                 You've accessed a unique link to a private resource.
                 Most likely, someone you know shared it with you.
                 We can email to the owner of this resource, with your request for access, if you enter your email address below.
-                If you're unsure about the origin of this resource, please leave this page now. <Link external href="https://github.com/nehloo/look-education" target="_blank">Terms of Service.</Link>
+                If you're unsure about the origin of this resource, please leave this page now. <Link external href="https://github.com/nehloo/LOOK.education" target="_blank">Terms of Service.</Link>
               </CardContent>
               <CardFooter className={"no-border no-padding-vertical"}>
                 <span>
@@ -143,9 +143,9 @@ export default class CollectionPageAccessDenied extends Component {
         </div>
       </Block>
       <Block className="text-align-center">
-        <Link color="blue" href="https://github.com/nehloo/look-education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
+        <Link color="blue" href="https://github.com/nehloo/LOOK.education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
         <br />
-        2019 &copy; Nehloo Foundation, Inc.
+        {new Date().getFullYear()} &copy; Nehloo Foundation, Inc. / Nehloo Interactive
         <br /><br />
       </Block>
       </>

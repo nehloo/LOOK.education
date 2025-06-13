@@ -5,8 +5,8 @@
  */
 
 import Parse from 'parse/dist/parse.min.js';
-Parse.initialize(import.meta.env.REACT_APP_PARSE_SERVER_APP_KEY);
-Parse.serverURL = import.meta.env.REACT_APP_PARSE_SERVER_URL;
+Parse.initialize(import.meta.env.VITE_APP_PARSE_SERVER_APP_ID);
+Parse.serverURL = import.meta.env.VITE_APP_PARSE_SERVER_URL;
 
 const DatabaseRequest = {
 

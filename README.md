@@ -47,7 +47,7 @@ Dependencies:
 
 ```
 cd PATH_TO_YOUR_LOCAL_APP_FOLDER
-git clone https://github.com/nehloo/look-education.git
+git clone https://github.com/nehloo/LOOK.education.git
 npm i
 npm audit fix
 ```
@@ -73,8 +73,8 @@ nano .env
 
 ```
 // .env file
-REACT_APP_PARSE_SERVER_URL=http://domain_name.com/parse
-REACT_APP_PARSE_SERVER_APP_KEY=YOUR_APP_ID
+VITE_APP_PARSE_SERVER_URL=http://domain_name.com/parse
+VITE_APP_PARSE_SERVER_APP_ID=YOUR_APP_ID
 ```
 
 ### Run the app:
@@ -85,7 +85,7 @@ npm start
 
 ## Issues
 
-Please log any issues to the main [repo](https://github.com/nehloo/look-education/issues).
+Please log any issues to the main [repo](https://github.com/nehloo/LOOK.education/issues).
 
 ## LTI Tool Integrations
 

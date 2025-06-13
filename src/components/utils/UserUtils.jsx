@@ -9,6 +9,16 @@ import JSUtils from "./JSUtils"
 
 const UserUtils = {
 
+  userInfo: {
+    userBrand: '"Your Company or Organization (or location or slogan, for brands)',
+    userLogo: 'URL/Link To Your Photo or Logo',
+    userTitle: 'Your Job Title or Headline',
+    userOrganization: 'Your Name or Organization Name',
+  },
+  setUserInfo(key, value) {
+    this.userInfo[key] = value;
+  },
+
   /*
   |--------------------------------------------------------------------------
   | GetUserByEmail

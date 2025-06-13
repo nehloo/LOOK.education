@@ -99,7 +99,7 @@ export default class QuizEditPage extends React.Component {
     this.setState({ progress:JSUtils.FormatTimestamp(seconds) })
 
     var scroll = Scroll.animateScroll
-    //console.log(scroll)
+    // console.log(scroll)
     scroll.scrollToBottom({
       smooth: true,
       duration: 500
