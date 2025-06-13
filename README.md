@@ -30,9 +30,6 @@ Code of Conduct:
 - This platform only helps curate, organize and distribute the third-party content made by, or licensed for, the third-party individuals or organizations that may use this platform.
 - This platform may offer layers of interactivity added on top of third-party content that its users may own, but only if said layers of interactivity don't infringe any external terms of service imposed by the third-party service or content providers.
 
-Dependencies:
-- [https://github.com/look-education/look-integrations-framework](https://github.com/look-education/look-integrations-framework)
-
 ## Use cases
 - Pre-K and K-12 schools
 - Homeschooling
@@ -49,7 +46,6 @@ Dependencies:
 cd PATH_TO_YOUR_LOCAL_APP_FOLDER
 git clone https://github.com/nehloo/LOOK.education.git
 npm i
-npm audit fix
 ```
 
 ### Create your own branch to change the code:
@@ -96,3 +92,9 @@ Create a configuration.xml file with the details of your LTI tool. [See an examp
 If you are a third-party IT company able to provide support for installing and/or maintaining local instances of LOOK.education Visual LMS for organizations requesting and needing this software, please list your contact information below:
 
 - [Add your IT support company - install, maintain, custom development etc.]
+
+## 📝 License
+
+This project is licensed under the **Polyform Noncommercial License 1.0.0 with Internal Training Exception**.  
+See the [LICENSE](./LICENSE) file for full terms.
+![License](https://img.shields.io/badge/license-Polyform--Noncommercial-orange)
