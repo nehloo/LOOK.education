@@ -24,8 +24,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "postinstall": "cpy './node_modules/framework7-icons/fonts/*.*' './src/fonts/'",
-    "start": "parse-server --appId $APP_ID --masterKey $MASTER_KEY --databaseURI $DATABASE_URI --cloud ./cloud/main.js --publicServerURL $PUBLIC_SERVER_URL --port 1337"
+    "postinstall": "cpy './node_modules/framework7-icons/fonts/*.*' './src/fonts/'"
   },
   "browserslist": [
     "Android >= 5",
@@ -51,7 +50,6 @@
     "material-design-icons": "^3.0.1",
     "moment": "^2.30.1",
     "parse": "^6.1.1",
-    "parse-server": "^6.2.0",
     "passport": "^0.6.0",
     "pluralize": "^8.0.0",
     "preact": "^10.26.9",
@@ -86,7 +84,6 @@
     "css-minimizer-webpack-plugin": "^7.0.2",
     "dotenv": "^16.4.0",
     "ora": "^8.2.0",
-    "parse-dashboard": "^7.2.0",
     "postcss-loader": "^8.1.1",
     "postcss-preset-env": "^10.2.3",
     "process": "^0.11.10",

@@ -77,8 +77,16 @@ const DatabaseRequest = {
   | Returns current user
   |
   */
-  GetCurrentUser: () => {
-    return Parse.User.current();
+  GetCurrentUser: async () => {
+    try {
+      console.log("Getting current user...");
+      const user = await Parse.Cloud.run("getCurrentUser");
+      console.log("Current user:", user);
+      return user;
+    } catch (error) {
+      console.error("Error getting current user:", error);
+      return null;
+    }
   },
 
   /*
@@ -420,9 +428,9 @@ const DatabaseRequest = {
   */
   UserSignUp: async (data) => {
     try {
-      //console.log("Creating user...");
+      console.log("Creating user...");
       var user = new Parse.User();
-      //console.log(user);
+      console.log(user);
       for (var [key, value] of Object.entries(data)) {
         user.set(key, value);
       }
@@ -665,9 +673,7 @@ const DatabaseRequest = {
   |
   */
   FetchObjects: async (dict) => {
-    //console.log("Fetching objects...");
     const query = DatabaseRequest.CreateQuery(dict);
-    //console.log(query);
     if (dict["limit"] == 1) {
       const object = await query.first();
       return object;

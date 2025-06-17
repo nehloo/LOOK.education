@@ -54,12 +54,6 @@ npm i
 git branch experiment
 ```
 
-### Install Parse Server locally:
-
-Learn more about Parse Server: [parseplatform.org](https://parseplatform.org)
-
-More details about installing Parse Server locally: https://github.com/parse-community/parse-server
-
 ### Create a new .env file and replace the values with your own info:
 
 ```
@@ -68,12 +62,27 @@ nano .env
 ```
 
 ```
-// .env file
+# .env file
 VITE_APP_PARSE_SERVER_URL=http://domain_name.com/parse
 VITE_APP_PARSE_SERVER_APP_ID=YOUR_APP_ID
 ```
 
-### Run the app:
+### Install Parse Server & Parse Dashboard locally:
+
+```
+cd PATH_TO_YOUR_LOCAL_APP_FOLDER
+docker compose up -d
+```
+
+Once running:
+	•	Dashboard: http://localhost:4040
+	•	Server: http://localhost:1337/parse
+
+Learn more about Parse Server: [parseplatform.org](https://parseplatform.org)
+
+More details about installing Parse Server locally: https://github.com/parse-community/parse-server
+
+### Run the app locally:
 
 ```
 npm start
@@ -88,16 +97,9 @@ This project uses a Dockerfile for automated deployment on Back4App and uses env
 - Public assets: in `public/`
 
 Ensure your `.env` or Back4App environment variables include:
-- `APP_ID`
-- `MASTER_KEY`
-- `DATABASE_URI`
-- `PUBLIC_SERVER_URL`
-
-To run locally, type this in terminal: docker-compose up --build
-
-Once running:
-	•	Dashboard: http://localhost:4040
-	•	Server: http://localhost:1337/parse
+- `VITE_APP_PARSE_SERVER_APP_ID`
+- `VITE_APP_PARSE_SERVER_JS_KEY`
+- `VITE_APP_PARSE_SERVER_URL`
 
 ## Issues
 

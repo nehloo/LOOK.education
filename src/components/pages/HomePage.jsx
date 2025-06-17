@@ -32,18 +32,22 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
   const [contentAnalytics, setContentAnalytics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(undefined);
+  const currentUser = DatabaseRequest.GetCurrentUser();
 
   const timeoutRef = useRef(null);
   const refEmail = useRef(null);
 
   useEffect(() => {
+    console.log("🕐 HomePage mounted, initializing Framework7 instance");
     const f7 = Framework7.instance;
     if (!f7) {
       console.error("Framework7 instance is not initialized.");
       return;
     }
 
+    console.log("🕐 HomePage mounted, checking isLargeScreen");
     setIsLargeScreen(F7Utils.IsLargeScreen(f7));
+    console.log("🕐 isLargeScreen:", isLargeScreen);
 
     if (props.searchTerm) {
       F7Utils.SetDocumentTitle(props.searchTerm);
@@ -182,6 +186,9 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
     console.warn("🕐 Waiting for isLargeScreen check");
     return null;
   }
+  else {
+    console.log("🕐 HomePage isLargeScreen:", isLargeScreen);
+  }
 
   return (
     <Page name="home">
@@ -189,26 +196,25 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
         <NavTitle colorTheme="black">
           <Link className={ isLargeScreen ? "" : "no-padding-left" } href="/" external><img src="./img/look-education-sticker.png" height="50" /></Link>
         </NavTitle>
-        { DatabaseRequest.GetCurrentUser() &&
+        { currentUser &&
           <NavRight colorTheme="black">
-            { IsLargeScreen &&
+            { isLargeScreen &&
               <Searchbar
                 inline
                 customSearch
                 backdrop
                 placeholder="Find content..."
-                disableButton={!$theme.aurora}
+                disableButton={false} /**{!$theme.aurora}}*/
                 onSearchbarSearch={ (searchbar, query, previousQuery) => {
                   search(searchbar, query, previousQuery);
                 }}
               ></Searchbar>
             }
-            <Link panelOpen="right"><img className="rounded" alt="" src={ DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") } height="38" valign="middle" /></Link>
           </NavRight>
         }
-        { !DatabaseRequest.GetCurrentUser() &&
+        { !currentUser &&
           <NavRight colorTheme="black">
-            <Link onClick={() => setPopupOpened(true)}><img className="rounded" alt="" src={ DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), "logo") } height="38" valign="middle" /></Link>
+            <Link onClick={() => setPopupOpened(true)}><img className="rounded" alt="" src={ DatabaseRequest.GetValue(currentUser, "logo") } height="38" valign="middle" /></Link>
           </NavRight>
         }
       </Navbar>
@@ -261,7 +267,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
 
       <br />
 
-      { !DatabaseRequest.GetCurrentUser() &&
+      { !currentUser &&
         <Block>
           <Button color="blue" large fill raised outline className="margin-horizontal margin-vertical" onClick={() => setPopupOpened(true)}><b>Join LOOK.education</b></Button>
         </Block>
@@ -276,7 +282,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
       { props.userId && !searchTerm &&
         <Block className="no-margin-vertical">
           <h1>
-            { props.userId == DatabaseRequest.GetId(DatabaseRequest.GetCurrentUser()) &&
+            { props.userId == DatabaseRequest.GetId(currentUser) &&
               <>My Collections</>
             }
           </h1>
@@ -322,7 +328,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
         </div>
       }
 
-      { !DatabaseRequest.GetCurrentUser() &&
+      { !currentUser &&
         <Block className="text-align-center">
           <Link color="blue" href="https://github.com/nehloo/LOOK.education" external target="_blank">LOOK.education &nbsp; | &nbsp; Open-source Visual LMS</Link>
           <br />

@@ -1,9 +1,16 @@
 # User custom config files
 parse-dashboard-config.json
+parse-dashboard-config.js
 ecosystem.config.js
 dashboard-server.js
 dashboard-server.mjs
+server.js
 .npmrc
+
+# parse local
+parse-dashboard-local
+parse-server-local
+logs
 
 # dotenv environment variables file
 .env
@@ -20,6 +27,7 @@ yarn-error.log*
 
 # Runtime data
 pnpm-lock.yaml
+pnpm-workspace.yaml
 package-lock.json
 pids
 *.pid

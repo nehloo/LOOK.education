@@ -1,0 +1,49 @@
+services:
+  mongo:
+    image: mongo:6.0
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  parse-server:
+    image: parseplatform/parse-server
+    restart: always
+    ports:
+      - "${PARSE_SERVER_PORT}:1337"
+    environment:
+      - PARSE_SERVER_APPLICATION_ID=${VITE_APP_PARSE_SERVER_APP_ID}
+      - PARSE_SERVER_MASTER_KEY=${VITE_APP_PARSE_SERVER_MASTER_KEY}
+      - PARSE_SERVER_DATABASE_URI=${PARSE_DATABASE_URI}
+      - PARSE_SERVER_CLOUD=/parse-server/cloud/main.js
+      - PARSE_SERVER_MOUNT_PATH=${PARSE_MOUNT}
+      - PARSE_SERVER_HOST=0.0.0.0
+      - PARSE_SERVER_MASTER_KEY_IPS=0.0.0.0/0
+    volumes:
+      - ./cloud:/parse-server/cloud
+    depends_on:
+      - mongo
+
+  parse-dashboard:
+    image: parseplatform/parse-dashboard
+    ports:
+      - "4040:4040"
+    restart: always
+    volumes:
+      - ./parse-dashboard-config.json:/parse-dashboard/parse-dashboard-config.json
+    command: ["--config", "/parse-dashboard/parse-dashboard-config.json"]
+    environment:
+      - PARSE_DASHBOARD_SERVER_URL=http://localhost:1337/parse
+      - PARSE_DASHBOARD_ALLOW_INSECURE_HTTP=true
+    depends_on:
+      - parse-server
+
+volumes:
+  mongo-data:
+  parse_dashboard:
+  search_engine:
+  parse_server_cloud:
+    driver: local
+    driver_opts:
+      type: none
+      device: ../cloud_code
+      o: bind
