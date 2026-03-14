@@ -7,7 +7,7 @@ import Framework7 from 'framework7/lite-bundle';
 
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Page, Navbar, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar,
+  Page, Navbar, NavLeft, NavTitle, NavRight, Link, Block, Chip, Icon, Popup, Searchbar,
   ListInput, List, Button, AccordionItem, AccordionToggle, AccordionContent
 } from 'framework7-react';
 
@@ -33,6 +33,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
   const [contentAnalytics, setContentAnalytics] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(undefined);
+  const [refreshKey, setRefreshKey] = useState(0);
   const currentUser = DatabaseRequest.GetCurrentUser();
 
   const f7 = Framework7.instance;
@@ -180,32 +181,41 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
   }
 
   return (
-    <Page name="home">
+    <Page name="home" onPageBeforeIn={ () => setRefreshKey(k => k + 1) }>
       <Navbar bgColor="white">
+        <NavLeft>
+          <Link panelOpen="left" iconF7="menu" />
+        </NavLeft>
         <NavTitle colorTheme="black">
           <Link className={ isLargeScreen ? "" : "no-padding-left" } href="/" external><img src="./img/look-education-sticker.png" height="50" /></Link>
         </NavTitle>
-        { currentUser &&
-          <NavRight colorTheme="black">
-            { isLargeScreen &&
-              <Searchbar
-                inline
-                customSearch
-                backdrop
-                placeholder="Find content..."
-                disableButton={false}
-                onSearchbarSearch={ (searchbar, query, previousQuery) => {
-                  handleSearch(searchbar, query, previousQuery);
-                }}
-              ></Searchbar>
-            }
-          </NavRight>
-        }
-        { !currentUser &&
-          <NavRight colorTheme="black">
-            <Link onClick={() => setPopupOpened(true)}><img className="rounded" alt="" src={ DatabaseRequest.GetValue(currentUser, "logo") } height="38" valign="middle" /></Link>
-          </NavRight>
-        }
+        <NavRight colorTheme="black">
+          { currentUser && isLargeScreen &&
+            <Searchbar
+              inline
+              customSearch
+              backdrop
+              placeholder="Find content..."
+              disableButton={false}
+              onSearchbarSearch={ (searchbar, query, previousQuery) => {
+                handleSearch(searchbar, query, previousQuery);
+              }}
+            ></Searchbar>
+          }
+          { currentUser &&
+            <Link panelOpen="right" style={{ marginLeft: 8 }}>
+              { DatabaseRequest.GetValue(currentUser, "logo")
+                ? <img className="rounded" alt="" src={ DatabaseRequest.GetValue(currentUser, "logo") } height="38" style={{ verticalAlign: "middle" }} />
+                : <Icon f7="person_circle" size="38px" />
+              }
+            </Link>
+          }
+          { !currentUser &&
+            <Link onClick={ () => setPopupOpened(true) }>
+              <Icon f7="person_circle" size="38px" />
+            </Link>
+          }
+        </NavRight>
       </Navbar>
 
       { !isLargeScreen &&
@@ -297,7 +307,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
       }
 
       { ((!props.latest && !props.quizzes) || searchTerm) &&
-        <CollectionList className="collectionList" userId={ props.userId } favorites={ props.favorites } searchTerm={ searchTerm } />
+        <CollectionList key={ refreshKey } className="collectionList" userId={ props.userId } favorites={ props.favorites } searchTerm={ searchTerm } />
       }
 
       { content &&
