@@ -15,7 +15,6 @@ import CollectionList from './CollectionList';
 import HomePageMenuLinks from './HomePageMenuLinks';
 import ContentCard from './ContentCard';
 
-import Parse from 'parse/dist/parse.min.js';
 import DatabaseRequest from "../frameworks/DatabaseRequest";
 import F7Utils from "../utils/F7Utils";
 import CollectionUtils from '../utils/CollectionUtils';
@@ -117,34 +116,19 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
     setBtnSignup(true);
   };
 
-  const handleSubmit = async () => {
-    const user = await Parse.Cloud.run("getUserByEmail", { email });
+  const handleLogin = () => {
+    if (!email)    { f7.dialog.alert("", "Enter your email"); return; }
+    if (!password) { f7.dialog.alert("", "Enter your password"); return; }
+    logIn();
+  };
 
-    if (user) {
-      if (password !== '') {
-        logIn();
-      } else {
-        f7.dialog.alert("", "Enter your password");
-        setBrandField(false);
-        setBtnLogin(true);
-        setBtnSignup(false);
-      }
-    } else {
-      if (password !== '' && brand !== '') {
-        if (password !== verifyPassword) {
-          f7.dialog.alert("", "Passwords do not match");
-          return;
-        }
-        signUp();
-      } else {
-        if (brandField) {
-          f7.dialog.alert("", "Enter your password and brand name");
-        }
-        setBrandField(true);
-        setBtnSignup(true);
-        setBtnLogin(false);
-      }
-    }
+  const handleSignUp = () => {
+    if (!email)          { f7.dialog.alert("", "Enter your email"); return; }
+    if (!password)       { f7.dialog.alert("", "Enter your password"); return; }
+    if (!verifyPassword) { f7.dialog.alert("", "Re-enter your password"); return; }
+    if (password !== verifyPassword) { f7.dialog.alert("", "Passwords do not match"); return; }
+    if (!brand)          { f7.dialog.alert("", "Enter your brand or channel name"); return; }
+    signUp();
   };
 
   const signUp = async () => {
@@ -412,7 +396,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
             <Block>
               { btnLogin  &&
                 <>
-                <Button raised large fill onClick={ handleSubmit }>Login</Button>
+                <Button raised large fill onClick={ handleLogin }>Login</Button>
                 <Button raised onClick={ resetPassword } className="margin-top">Forgot password?</Button>
                 <br />
                 <center>
@@ -422,7 +406,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
               }
               { btnSignup  &&
                 <>
-                <Button raised large fill onClick={ handleSubmit }>SignUp</Button>
+                <Button raised large fill onClick={ handleSignUp }>SignUp</Button>
                 <br />
                 <center>
                   <Link onClick={ resetLoginScreen }>Already have an account?</Link>
