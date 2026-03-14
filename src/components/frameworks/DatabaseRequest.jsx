@@ -77,16 +77,8 @@ const DatabaseRequest = {
   | Returns current user
   |
   */
-  GetCurrentUser: async () => {
-    try {
-      console.log("Getting current user...");
-      const user = await Parse.Cloud.run("getCurrentUser");
-      console.log("Current user:", user);
-      return user;
-    } catch (error) {
-      console.error("Error getting current user:", error);
-      return null;
-    }
+  GetCurrentUser: () => {
+    return Parse.User.current();
   },
 
   /*

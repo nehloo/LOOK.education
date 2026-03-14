@@ -15,6 +15,7 @@ import CollectionList from './CollectionList';
 import HomePageMenuLinks from './HomePageMenuLinks';
 import ContentCard from './ContentCard';
 
+import Parse from 'parse/dist/parse.min.js';
 import DatabaseRequest from "../frameworks/DatabaseRequest";
 import F7Utils from "../utils/F7Utils";
 import CollectionUtils from '../utils/CollectionUtils';
@@ -34,6 +35,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
   const [isLargeScreen, setIsLargeScreen] = useState(undefined);
   const currentUser = DatabaseRequest.GetCurrentUser();
 
+  const f7 = Framework7.instance;
   const timeoutRef = useRef(null);
   const refEmail = useRef(null);
 
@@ -113,11 +115,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
   };
 
   const handleSubmit = async () => {
-    const user = await DatabaseRequest.FetchObjects({
-      class: "User",
-      equalTo: { email },
-      limit: 1
-    });
+    const user = await Parse.Cloud.run("getUserByEmail", { email });
 
     if (user) {
       if (password !== '') {
@@ -204,9 +202,9 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                 customSearch
                 backdrop
                 placeholder="Find content..."
-                disableButton={false} /**{!$theme.aurora}}*/
+                disableButton={false}
                 onSearchbarSearch={ (searchbar, query, previousQuery) => {
-                  search(searchbar, query, previousQuery);
+                  handleSearch(searchbar, query, previousQuery);
                 }}
               ></Searchbar>
             }
@@ -224,9 +222,9 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
           customSearch
           backdrop
           placeholder="Find content..."
-          disableButton={!$theme.aurora}
+          disableButton={false}
           onSearchbarSearch={ (searchbar, query, previousQuery) => {
-            search(searchbar, query, previousQuery);
+            handleSearch(searchbar, query, previousQuery);
           }}
         ></Searchbar>
       }
