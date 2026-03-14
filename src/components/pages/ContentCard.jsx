@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { Button, Card, CardContent, CardHeader, CardFooter, Icon, Link, Popover, List, ListItem, SkeletonBlock } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest';
 import CollectionUtils from '../utils/CollectionUtils';
@@ -24,13 +25,13 @@ export default class ContentCard extends Component {
   }
 
   renameResource = () => {
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt('', "Rename Resource:", async(newTitle) => {
       if (await CollectionUtils.RenameContent(this.state.content, newTitle)) {
         this.setState({ content:this.state.content });
       }
     }, function(cancel) {}, DatabaseRequest.GetValue(this.state.content, "title"));
-    F7Utils.FocusPromptInput(this);
+    F7Utils.FocusPromptInput();
   }
 
   render() {

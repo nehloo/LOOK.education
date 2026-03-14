@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { BlockTitle, Icon, Chip, Link } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest';
 import CollectionUtils from '../utils/CollectionUtils';
@@ -29,13 +30,13 @@ export default class CollectionPageTitle extends Component {
   }
 
   renameCurrentCollection = async () => {
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt('', "Rename Collection:", async(newTitle) => {
       if (await CollectionUtils.RenameCollection(this.state.collection, newTitle)) {
         this.setState({ collection:this.state.collection });
       }
     }, function(cancel) {}, DatabaseRequest.GetValue(this.state.collection, "title"));
-    F7Utils.FocusPromptInput(this);
+    F7Utils.FocusPromptInput();
   }
 
   toggleFavorite = async (event) => {

@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { Block, Page, Navbar, Link, List, ListItem } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import DatabaseRequest from "../frameworks/DatabaseRequest";
 import F7Utils from '../utils/F7Utils';
@@ -13,7 +14,7 @@ import F7Utils from '../utils/F7Utils';
 export default class extends React.Component {
 
   logOut = () => {
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.confirm('', 'Log out?', async() => {
       const user = DatabaseRequest.GetCurrentUser();
       await DatabaseRequest.UserLogOut();
@@ -26,7 +27,7 @@ export default class extends React.Component {
   }
 
   setUserInfo = (prompt, field) => {
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt('', prompt, async(newValue) => {
       if (newValue && newValue != DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), field)) {
         DatabaseRequest.SetValue(DatabaseRequest.GetCurrentUser(), field, newValue);
@@ -34,7 +35,7 @@ export default class extends React.Component {
         window.location.reload();
       }
     }, function() {}, DatabaseRequest.GetCurrentUser() ? DatabaseRequest.GetValue(DatabaseRequest.GetCurrentUser(), field) : '');
-    F7Utils.FocusPromptInput(this);
+    F7Utils.FocusPromptInput();
   }
 
   setUserName = () => {

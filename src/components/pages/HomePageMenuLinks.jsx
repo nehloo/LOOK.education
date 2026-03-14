@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { Chip, Icon, Link } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import CollectionUtils from '../utils/CollectionUtils';
 import DatabaseRequest from '../frameworks/DatabaseRequest';
@@ -17,9 +18,9 @@ export default class HomePageMenuLinks extends Component {
     if (!DatabaseRequest.GetCurrentUser()) {
       return;
     }
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt('', "New Collection Title:", async(newTitle) => {
-      let router = this.$f7.views.main.router; // $f7router is not available in sub-components
+      let router = Framework7.instance.views.main.router;
       const collection = await CollectionUtils.AddNewCollection(newTitle);
       if (collection) {
         DatabaseRequest.LogUserAction({
@@ -29,7 +30,7 @@ export default class HomePageMenuLinks extends Component {
         router.navigate('/collection/' + DatabaseRequest.GetId(collection));
       }
     }, function(cancel) {}, "");
-    F7Utils.FocusPromptInput(this);
+    F7Utils.FocusPromptInput();
   }
 
   render() {

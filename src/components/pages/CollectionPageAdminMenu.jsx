@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { AccordionItem, AccordionContent, AccordionToggle, Chip, Icon } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import CollectionPageAdminMenuLinks from "./CollectionPageAdminMenuLinks";
 import DatabaseRequest from '../frameworks/DatabaseRequest'
@@ -15,7 +16,7 @@ export default class CollectionPageAdminMenu extends Component {
 
   render() {
 
-    let app = this.$f7;
+    let app = Framework7.instance;
 
     const isOwner = DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "user")) == DatabaseRequest.GetId(DatabaseRequest.GetCurrentUser());
     var subscribersCount = DatabaseRequest.GetValue(this.props.collection, "subscribersCount");
