@@ -23,6 +23,7 @@ import CollectionUtils from '../utils/CollectionUtils';
 export default function HomePage({ latest, favorites, quizzes, ...props }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [verifyPassword, setVerifyPassword] = useState('');
   const [brand, setBrand] = useState('');
   const [popupOpened, setPopupOpened] = useState(false);
   const [btnLogin, setBtnLogin] = useState(true);
@@ -102,6 +103,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
 
   const resetLoginScreen = () => {
     setPassword('');
+    setVerifyPassword('');
     setBrandField(false);
     setBtnLogin(true);
     setBtnSignup(false);
@@ -109,6 +111,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
 
   const resetSignupScreen = () => {
     setPassword('');
+    setVerifyPassword('');
     setBrandField(true);
     setBtnLogin(false);
     setBtnSignup(true);
@@ -128,10 +131,14 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
       }
     } else {
       if (password !== '' && brand !== '') {
+        if (password !== verifyPassword) {
+          f7.dialog.alert("", "Passwords do not match");
+          return;
+        }
         signUp();
       } else {
         if (brandField) {
-          f7.dialog.alert("", "Enter your password and username");
+          f7.dialog.alert("", "Enter your password and brand name");
         }
         setBrandField(true);
         setBtnSignup(true);
@@ -356,19 +363,20 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                 type="email"
                 placeholder="you@example.com"
                 name="email"
-                autocomplete="email"
+                autocomplete="username"
+                inputmode="email"
                 className="text"
                 value={email}
                 required
                 onInput={(e) => {
-                  setEmail(e.target.value.toLowerCase());
+                  setEmail(e.target.value.toLowerCase().trim());
                 }}
               />
               <ListInput
                 label="Password"
                 type="password"
                 name="password"
-                autocomplete="current-password"
+                autocomplete={ btnSignup ? "new-password" : "current-password" }
                 placeholder="Your secure password"
                 value={password}
                 required
@@ -377,6 +385,19 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                 }}
               />
               {(brandField === true) &&
+                <>
+                <ListInput
+                  label="Verify Password"
+                  type="password"
+                  name="verify-password"
+                  autocomplete="new-password"
+                  placeholder="Re-enter your password"
+                  value={verifyPassword}
+                  required
+                  onInput={(e) => {
+                    setVerifyPassword(e.target.value);
+                  }}
+                />
                 <ListInput
                   label="Brand or Channel"
                   type="text"
@@ -385,7 +406,9 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                   onInput={(e) => {
                     setBrand(e.target.value);
                   }}
-                />}
+                />
+                </>
+              }
             </List>
             <Block>
               { btnLogin  &&
