@@ -363,7 +363,7 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                 type="email"
                 placeholder="you@example.com"
                 name="email"
-                autocomplete="username"
+                autocomplete="email"
                 inputmode="email"
                 className="text"
                 value={email}
