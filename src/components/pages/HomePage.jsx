@@ -364,7 +364,6 @@ export default function HomePage({ latest, favorites, quizzes, ...props }) {
                 placeholder="you@example.com"
                 name="email"
                 autocomplete="email"
-                inputmode="email"
                 className="text"
                 value={email}
                 required
