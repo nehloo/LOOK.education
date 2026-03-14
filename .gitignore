@@ -83,3 +83,6 @@ typings/
 
 # mac style file
 .DS_Store
+
+# Claude Code worktrees and session data
+.claude/
