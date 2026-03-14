@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { Chip, Icon, Link, Popover, List, ListItem, ListInput, Button } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest'
 import CollectionUtils from '../utils/CollectionUtils'
@@ -29,8 +30,8 @@ export default class CollectionPageAdminMenuLinks extends Component {
 
   handleAddSubcollection = async (event) => {
     event.preventDefault();
-    let app = this.$f7;
-    let router = this.$f7.views.main.router; // $f7router is not available in sub-components
+    let app = Framework7.instance;
+    let router = Framework7.instance.views.main.router; // $f7router is not available in sub-components
     var subCollection = await CollectionUtils.AddSubcollection(this.titleSubcollection, this.props.collection);
     if (subCollection) {
       router.navigate('/collection/' + DatabaseRequest.GetId(subCollection));
@@ -44,7 +45,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
   handleSendInvite = async (event) => {
     event.preventDefault();
     if (!this.emailInvitee) {
-      let app = this.$f7;
+      let app = Framework7.instance;
       app.dialog.alert("", "Please enter an email address.", () => {
         return;
       });
@@ -68,7 +69,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
       }
     }
     else {
-      let app = this.$f7;
+      let app = Framework7.instance;
       app.dialog.alert(this.emailInvitee, "User not found:", () => {
       });
     }
@@ -77,7 +78,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
   handleAddContent = async (event) => {
     event.preventDefault();
     F7Utils.SetChipIconTextForTarget(this.chipElement, "reload");
-    let app = this.$f7;
+    let app = Framework7.instance;
     try {
       const content = await CollectionUtils.AddContentToCollection(this.contentUrl, this.props.collection);
       if (content) {
@@ -98,7 +99,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
     if (!this.props.collection) {
       return;
     }
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.confirm("If you archive this collection, you won't be able to find it listed on your main page, and you'll no longer have access to any of its content.", "Archive this collection?", () => {
       app.dialog.confirm("", "Are you sure you want to archive this collection?", async() => {
         if (await CollectionUtils.DeleteCollection(this.props.collection)) {
@@ -110,7 +111,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
 
   togglePublicPrivate = async () => {
     if (DatabaseRequest.HasPublicReadAccess(this.props.collection)) {
-      let app = this.$f7;
+      let app = Framework7.instance;
       app.dialog.confirm("The entire content in this collection, including all content in all subcollections, will only be accessible privately to its subscribers, including yourself.", "Make this collection private?", () => {
         app.dialog.confirm("", "Are you sure you want to make this collection private?", async() => {
           await CollectionUtils.TogglePublicPrivate(this.props.collection);
@@ -119,7 +120,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
       });
     }
     else {
-      let app = this.$f7;
+      let app = Framework7.instance;
       app.dialog.confirm("The entire content in this collection, including all content in all subcollections, will be accessible publicly for anyone to view (read-only access).", "Enable public access for this collection?", () => {
         app.dialog.confirm("", "Are you sure you want to make this collection public for anyone to see?", async() => {
           await CollectionUtils.TogglePublicPrivate(this.props.collection);
@@ -130,16 +131,12 @@ export default class CollectionPageAdminMenuLinks extends Component {
   }
 
   toggleFormDisplay = (element, event) => {
-    let $$ = this.$$;
-    if (element !== "formAddSubcollection") $$(".formAddSubcollection").addClass("display-none");
-    if (element !== "formAddContent") $$(".formAddContent").addClass("display-none");
-    if (element !== "formSendInvite") $$(".formSendInvite").addClass("display-none");
-    if ($$("." + element).hasClass("display-none")) {
-      $$("." + element).removeClass("display-none");
-    }
-    else {
-      $$("." + element).addClass("display-none");
-    }
+    const hide = (sel) => document.querySelectorAll(sel).forEach(el => el.classList.add("display-none"));
+    const toggle = (sel) => document.querySelectorAll(sel).forEach(el => el.classList.toggle("display-none"));
+    if (element !== "formAddSubcollection") hide(".formAddSubcollection");
+    if (element !== "formAddContent") hide(".formAddContent");
+    if (element !== "formSendInvite") hide(".formSendInvite");
+    toggle("." + element);
     try {
       this.chipElement = event.currentTarget;
     } catch(e) {}
@@ -147,7 +144,7 @@ export default class CollectionPageAdminMenuLinks extends Component {
 
   render() {
 
-    let app = this.$f7;
+    let app = Framework7.instance;
 
     const isOwner = DatabaseRequest.GetId(DatabaseRequest.GetValue(this.props.collection, "user")) == DatabaseRequest.GetId(DatabaseRequest.GetCurrentUser());
     var subscribersCount = DatabaseRequest.GetValue(this.props.collection, "subscribersCount");

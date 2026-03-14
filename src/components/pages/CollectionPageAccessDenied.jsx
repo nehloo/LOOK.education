@@ -6,6 +6,7 @@
 
 import React, { Component } from 'react';
 import { Block, Link, Card, CardContent, CardHeader, CardFooter, Button, Icon, List, ListInput } from 'framework7-react';
+import Framework7 from 'framework7/lite-bundle';
 
 import DatabaseRequest from '../frameworks/DatabaseRequest';
 
@@ -16,8 +17,8 @@ export default class CollectionPageAccessDenied extends Component {
   }
 
   sendAccessRequest = async () => {
-    let app = this.$f7;
-    let router = this.$f7.views.main.router; // $f7router is not available in sub-components
+    let app = Framework7.instance;
+    let router = Framework7.instance.views.main.router; // $f7router is not available in sub-components
     if (!this.emailAccessRequest || typeof this.emailAccessRequest === undefined || typeof this.emailAccessRequest === null || !this.emailAccessRequest.length) {
       app.dialog.alert("", "Please enter your email address.", () => {
       });

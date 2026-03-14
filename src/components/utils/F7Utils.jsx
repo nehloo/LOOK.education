@@ -11,9 +11,9 @@ const F7Utils = {
     return true;
   },
 
-  FocusPromptInput: (_this) => {
+  FocusPromptInput: () => {
     try {
-      _this.$$('.dialog-input').focus();
+      document.querySelector('.dialog-input')?.focus();
     } catch(e) {}
   },
 

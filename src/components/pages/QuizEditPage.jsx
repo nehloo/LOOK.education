@@ -6,6 +6,7 @@
 
 import React from 'react'
 import { Page, Navbar, NavLeft, Block, BlockTitle, ListInput, List, Chip, ListItem, AccordionContent, Link, Icon, Button } from 'framework7-react'
+import Framework7 from 'framework7/lite-bundle'
 
 import * as Scroll from 'react-scroll'
 
@@ -225,7 +226,7 @@ export default class QuizEditPage extends React.Component {
     const quiz = this.state.quiz
     const question = this.getQuestionAtTimestamp(timestamp)
     var answers = this.getAnswersForQuestion(question)
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt(DatabaseRequest.GetValue(question, "question") + "<br /><br />" + answers[index].answer, "Remove this answer?", () => {
       DatabaseRequest.SetValue(question, "answers", [])
       this.setState({ quiz:quiz })
@@ -244,7 +245,7 @@ export default class QuizEditPage extends React.Component {
   resetQuestionType(timestamp) {
     const quiz = this.state.quiz
     const question = this.getQuestionAtTimestamp(timestamp)
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt(DatabaseRequest.GetValue(question, "question") + "<br /><br />" + this.type[DatabaseRequest.GetValue(question, "type")], "Change answer type?", () => {
       DatabaseRequest.UnsetValue(question, "type")
       DatabaseRequest.UnsetValue(question, "answers")
@@ -278,7 +279,7 @@ export default class QuizEditPage extends React.Component {
   deleteQuestionAtTimestamp(timestamp) {
     const quiz = this.state.quiz
     const question = this.getQuestionAtTimestamp(timestamp)
-    let app = this.$f7;
+    let app = Framework7.instance;
     app.dialog.prompt(DatabaseRequest.GetValue(question, "question"), "Delete this question?", () => {
       DatabaseRequest.SetValue(question, "deleted", true)
       this.setState({ quiz:quiz })

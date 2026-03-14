@@ -6,6 +6,7 @@
 
 import React from 'react'
 import { Page, Link, Icon, Block, List, ListItem, ListInput, Button, Preloader, Navbar, NavLeft, NavTitle } from 'framework7-react'
+import Framework7 from 'framework7/lite-bundle'
 
 import ReactPlayer from 'react-player'
 
@@ -261,7 +262,7 @@ export default class VideoPlayPage extends React.Component {
 
   async quizSubmitAllAnswers() {
     if (!DatabaseRequest.GetCurrentUser() && !this.anonymousEmailAddress) {
-      let app = this.$f7
+      let app = Framework7.instance
       app.dialog.alert("", "Please enter your email address.", () => {
       })
       return
@@ -276,7 +277,7 @@ export default class VideoPlayPage extends React.Component {
         }
         if (!this.answers[timestamp].length) {
           shouldSubmit = false
-          let app = this.$f7
+          let app = Framework7.instance
           app.dialog.alert("", "Please answer the question.", () => {
           })
           return true
@@ -297,7 +298,7 @@ export default class VideoPlayPage extends React.Component {
       })
     }
     else {
-      let app = this.$f7
+      let app = Framework7.instance
       app.dialog.alert("", "Please answer all questions.", () => {
       })
     }
@@ -305,7 +306,7 @@ export default class VideoPlayPage extends React.Component {
 
   async quizSubmitAnswer(timestamp=false) {
     if (!DatabaseRequest.GetCurrentUser() && !this.anonymousEmailAddress) {
-      let app = this.$f7
+      let app = Framework7.instance
       app.dialog.alert("", "Please enter your email address.", () => {
       })
       return
@@ -319,7 +320,7 @@ export default class VideoPlayPage extends React.Component {
     if (DatabaseRequest.GetValue(this.nextQuestion, "type") !== "noAnswerRequired") {
       if (!this.answers[nextQuestionTimestamp]) return
       if (!this.answers[nextQuestionTimestamp].length) {
-        let app = this.$f7
+        let app = Framework7.instance
         app.dialog.alert("", "Please answer the question.", () => {
         })
       }
