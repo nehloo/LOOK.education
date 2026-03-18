@@ -66,11 +66,11 @@ export default function (props) {
       <div className="statusbar"></div>
 
       <Panel left cover themeDark>
-        <View url="/panel-left/" />
+        <View url="/panel-left/" routes={routes} />
       </Panel>
 
       <Panel right reveal themeDark>
-        <View url="/panel-right/" />
+        <View url="/panel-right/" routes={routes} />
       </Panel>
 
       <View
